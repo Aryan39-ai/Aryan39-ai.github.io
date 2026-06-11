@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub Lookup — Aryan Shresthacharya</title>
+<meta name="description" content="Search any GitHub user and see their profile, top repos and language stats.">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root { --bg:#0f1419; --card:#1a2129; --border:#2a333e; --text:#e8eaed; --muted:#8a94a0; --accent:#00d9ff; }
+  body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:2rem 1rem; }
+  h1 { font-size:1.6rem; font-weight:600; margin-bottom:.3rem; }
+  .sub { color:var(--muted); font-size:.9rem; margin-bottom:2rem; }
+  .search { display:flex; gap:.6rem; width:100%; max-width:520px; margin-bottom:1.5rem; }
+  input { flex:1; padding:.85rem 1.1rem; background:var(--card); border:1px solid var(--border); border-radius:12px; color:var(--text); font-size:1rem; outline:none; }
+  input:focus { border-color:var(--accent); }
+  button { padding:.85rem 1.4rem; background:var(--accent); border:none; border-radius:12px; color:#06262c; font-weight:600; font-size:1rem; cursor:pointer; transition:opacity .2s; }
+  button:hover { opacity:.85; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:1.5rem; width:100%; max-width:520px; margin-bottom:1rem; display:none; }
+  .profile { display:flex; gap:1.2rem; align-items:center; }
+  .profile img { width:80px; height:80px; border-radius:50%; border:2px solid var(--accent); }
+  .profile h2 { font-size:1.25rem; }
+  .profile .login { color:var(--accent); font-size:.9rem; text-decoration:none; }
+  .bio { color:var(--muted); font-size:.92rem; margin-top:1rem; line-height:1.5; }
+  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:.8rem; margin-top:1.2rem; }
+  .stat { background:var(--bg); border-radius:12px; padding:.8rem; text-align:center; }
+  .stat .n { font-size:1.3rem; font-weight:700; color:var(--accent); }
+  .stat .l { font-size:.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; margin-top:.2rem; }
+  .repos h3 { font-size:1rem; margin-bottom:.8rem; }
+  .repo { display:flex; justify-content:space-between; align-items:center; padding:.7rem .9rem; background:var(--bg); border-radius:10px; margin-bottom:.5rem; text-decoration:none; color:var(--text); transition:transform .15s; }
+  .repo:hover { transform:translateX(4px); }
+  .repo .name { font-weight:600; font-size:.95rem; }
+  .repo .meta { color:var(--muted); font-size:.8rem; margin-top:.15rem; }
+  .repo .stars { color:var(--accent); font-size:.85rem; white-space:nowrap; }
+  .langbar { display:flex; height:10px; border-radius:5px; overflow:hidden; margin:.8rem 0 .5rem; }
+  .langlist { display:flex; flex-wrap:wrap; gap:.7rem; font-size:.78rem; color:var(--muted); }
+  .langlist span::before { content:'●'; margin-right:.3rem; }
+  .msg { color:var(--muted); text-align:center; padding:1rem; display:none; max-width:520px; }
+  .footer { color:var(--muted); font-size:.8rem; margin-top:auto; padding-top:1.5rem; }
+  .footer a { color:var(--accent); text-decoration:none; }
+  @media (max-width:480px){ .stats{grid-template-columns:repeat(3,1fr);} .profile img{width:64px;height:64px;} }
+</style>
+</head>
+<body>
+<h1>GitHub Lookup</h1>
+<p class="sub">Search any GitHub username — profile, repos &amp; languages</p>
+
+<div class="search">
+  <input id="q" placeholder="e.g. Aryan39-ai" autocomplete="off" aria-label="GitHub username">
+  <button id="go">Search</button>
+</div>
+
+<p class="msg" id="msg"></p>
+
+<div class="card" id="profileCard">
+  <div class="profile">
+    <img id="avatar" alt="User avatar">
+    <div>
+      <h2 id="name"></h2>
+      <a class="login" id="login" target="_blank" rel="noopener"></a>
+    </div>
+  </div>
+  <p class="bio" id="bio"></p>
+  <div class="stats">
+    <div class="stat"><div class="n" id="repoCount">0</div><div class="l">Repos</div></div>
+    <div class="stat"><div class="n" id="followers">0</div><div class="l">Followers</div></div>
+    <div class="stat"><div class="n" id="following">0</div><div class="l">Following</div></div>
+  </div>
+  <div id="langs" style="display:none">
+    <div class="langbar" id="langbar"></div>
+    <div class="langlist" id="langlist"></div>
+  </div>
+</div>
+
+<div class="card repos" id="repoCard">
+  <h3>Top repositories</h3>
+  <div id="repoList"></div>
+</div>
+
+<p class="footer">Built by <a href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">Aryan Shresthacharya</a> · GitHub REST API</p>
+
+<script>
+const LANG_COLORS = { JavaScript:'#f1e05a', TypeScript:'#3178c6', Python:'#3572A5', 'C#':'#178600', HTML:'#e34c26', CSS:'#563d7c', Kotlin:'#A97BFF', Java:'#b07219', 'Jupyter Notebook':'#DA5B0B', Shell:'#89e051', C:'#555555', 'C++':'#f34b7d', Go:'#00ADD8', Rust:'#dea584', Swift:'#F05138', Ruby:'#701516', PHP:'#4F5D95', Dart:'#00B4AB', Other:'#8a94a0' };
+const q = document.getElementById('q'), msg = document.getElementById('msg');
+const profileCard = document.getElementById('profileCard'), repoCard = document.getElementById('repoCard');
+
+async function search() {
+  const user = q.value.trim();
+  if (!user) return;
+  msg.style.display='block'; msg.textContent='Searching…';
+  profileCard.style.display='none'; repoCard.style.display='none';
+  try {
+    const [uRes, rRes] = await Promise.all([
+      fetch(`https://api.github.com/users/${encodeURIComponent(user)}`),
+      fetch(`https://api.github.com/users/${encodeURIComponent(user)}/repos?per_page=100&sort=updated`)
+    ]);
+    if (uRes.status === 404) { msg.textContent = `No user found called "${user}".`; return; }
+    if (uRes.status === 403) { msg.textContent = 'Rate limit reached — try again in a few minutes.'; return; }
+    if (!uRes.ok) throw new Error();
+    const u = await uRes.json();
+    const repos = rRes.ok ? await rRes.json() : [];
+
+    document.getElementById('avatar').src = u.avatar_url;
+    document.getElementById('name').textContent = u.name || u.login;
+    const login = document.getElementById('login');
+    login.textContent = '@' + u.login; login.href = u.html_url;
+    document.getElementById('bio').textContent = u.bio || '';
+    document.getElementById('repoCount').textContent = u.public_repos;
+    document.getElementById('followers').textContent = u.followers;
+    document.getElementById('following').textContent = u.following;
+
+    const counts = {};
+    repos.forEach(r => { if (r.language) counts[r.language] = (counts[r.language]||0)+1; });
+    const total = Object.values(counts).reduce((a,b)=>a+b,0);
+    const langs = document.getElementById('langs');
+    if (total > 0) {
+      const bar = document.getElementById('langbar'), list = document.getElementById('langlist');
+      bar.innerHTML=''; list.innerHTML='';
+      Object.entries(counts).sort((a,b)=>b[1]-a[1]).forEach(([lang,n])=>{
+        const pct = (n/total*100);
+        const seg = document.createElement('div');
+        seg.style.cssText = `width:${pct}%;background:${LANG_COLORS[lang]||LANG_COLORS.Other}`;
+        bar.appendChild(seg);
+        const s = document.createElement('span');
+        s.style.color = LANG_COLORS[lang]||LANG_COLORS.Other;
+        s.textContent = `${lang} ${pct.toFixed(0)}%`;
+        list.appendChild(s);
+      });
+      langs.style.display='block';
+    } else langs.style.display='none';
+
+    const top = repos.filter(r=>!r.fork).sort((a,b)=>b.stargazers_count-a.stargazers_count).slice(0,6);
+    const rl = document.getElementById('repoList'); rl.innerHTML='';
+    top.forEach(r=>{
+      const a = document.createElement('a');
+      a.className='repo'; a.href=r.html_url; a.target='_blank'; a.rel='noopener';
+      a.innerHTML = `<div><div class="name">${r.name}</div><div class="meta">${r.language||''}${r.description? ' · '+r.description.slice(0,60):''}</div></div><div class="stars">★ ${r.stargazers_count}</div>`;
+      rl.appendChild(a);
+    });
+    msg.style.display='none';
+    profileCard.style.display='block';
+    if (top.length) repoCard.style.display='block';
+  } catch(e) { msg.textContent = 'Something went wrong — check your connection and try again.'; }
+}
+document.getElementById('go').addEventListener('click', search);
+q.addEventListener('keydown', e => { if (e.key==='Enter') search(); });
+q.value = 'Aryan39-ai'; search();
+</script>
+</body>
+</html>

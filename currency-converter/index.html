@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Currency Converter — Aryan Shresthacharya</title>
+<meta name="description" content="Live currency converter with historical rate chart. Built by Aryan Shresthacharya.">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --bg:#0f1419; --card:#1a2129; --border:#2a333e; --text:#e8eaed; --muted:#8a94a0; --accent:#00d9ff; --accent-dark:#0099b8; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 2rem 1rem; }
+  h1 { font-size: 1.6rem; font-weight: 600; margin-bottom: .3rem; }
+  .sub { color: var(--muted); font-size: .9rem; margin-bottom: 2rem; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; width: 100%; max-width: 460px; margin-bottom: 1.5rem; }
+  label { display: block; font-size: .8rem; color: var(--muted); margin-bottom: .4rem; text-transform: uppercase; letter-spacing: .05em; }
+  input, select { width: 100%; padding: .8rem 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 1.05rem; outline: none; transition: border-color .2s; }
+  input:focus, select:focus { border-color: var(--accent); }
+  .row { display: flex; gap: .8rem; align-items: flex-end; margin-top: 1rem; }
+  .row > div { flex: 1; }
+  .swap { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--accent); width: 46px; height: 46px; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; transition: all .2s; }
+  .swap:hover { border-color: var(--accent); transform: rotate(180deg); }
+  .result { text-align: center; padding: 1.2rem 0 .4rem; }
+  .result .big { font-size: 2.1rem; font-weight: 700; color: var(--accent); }
+  .result .rate { color: var(--muted); font-size: .85rem; margin-top: .3rem; }
+  .chart-wrap { position: relative; height: 220px; }
+  .chart-title { font-size: .85rem; color: var(--muted); margin-bottom: .8rem; }
+  .err { color: #ff6b6b; text-align: center; font-size: .9rem; padding: .5rem; display: none; }
+  .footer { color: var(--muted); font-size: .8rem; margin-top: auto; padding-top: 1.5rem; }
+  .footer a { color: var(--accent); text-decoration: none; }
+  @media (max-width: 480px) { .result .big { font-size: 1.6rem; } }
+</style>
+</head>
+<body>
+<h1>Currency Converter</h1>
+<p class="sub">Live rates &amp; 30-day history — no signup needed</p>
+
+<div class="card">
+  <label for="amount">Amount</label>
+  <input type="number" id="amount" value="100" min="0" step="any">
+  <div class="row">
+    <div>
+      <label for="from">From</label>
+      <select id="from"></select>
+    </div>
+    <button class="swap" id="swap" title="Swap currencies" aria-label="Swap currencies">⇄</button>
+    <div>
+      <label for="to">To</label>
+      <select id="to"></select>
+    </div>
+  </div>
+  <div class="result">
+    <div class="big" id="result">—</div>
+    <div class="rate" id="rateInfo"></div>
+  </div>
+  <div class="err" id="err">Couldn't fetch rates. Check your connection and try again.</div>
+</div>
+
+<div class="card">
+  <div class="chart-title" id="chartTitle">30-day exchange rate trend</div>
+  <div class="chart-wrap"><canvas id="chart"></canvas></div>
+</div>
+
+<p class="footer">Built by <a href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">Aryan Shresthacharya</a> · Rates from Frankfurter API (ECB data)</p>
+
+<script>
+const CURRENCIES = ["AUD","USD","EUR","GBP","JPY","NPR","INR","NZD","CAD","SGD","CNY","KRW","THB","CHF","HKD"];
+const fromSel = document.getElementById('from');
+const toSel = document.getElementById('to');
+const amountIn = document.getElementById('amount');
+const resultEl = document.getElementById('result');
+const rateEl = document.getElementById('rateInfo');
+const errEl = document.getElementById('err');
+let chart = null;
+let debounce = null;
+
+CURRENCIES.forEach(c => {
+  fromSel.add(new Option(c, c));
+  toSel.add(new Option(c, c));
+});
+fromSel.value = 'AUD'; toSel.value = 'NPR';
+
+async function convert() {
+  const amt = parseFloat(amountIn.value) || 0;
+  const from = fromSel.value, to = toSel.value;
+  errEl.style.display = 'none';
+  if (from === to) { resultEl.textContent = amt.toLocaleString() + ' ' + to; rateEl.textContent = '1 ' + from + ' = 1 ' + to; drawChart([], [], from, to); return; }
+  try {
+    const r = await fetch(`https://api.frankfurter.app/latest?from=${from}&to=${to}`);
+    if (!r.ok) throw new Error();
+    const d = await r.json();
+    const rate = d.rates[to];
+    resultEl.textContent = (amt * rate).toLocaleString(undefined, {maximumFractionDigits: 2}) + ' ' + to;
+    rateEl.textContent = `1 ${from} = ${rate.toLocaleString(undefined,{maximumFractionDigits:4})} ${to} · ${d.date}`;
+    loadHistory(from, to);
+  } catch (e) {
+    errEl.style.display = 'block';
+    resultEl.textContent = '—'; rateEl.textContent = '';
+  }
+}
+
+async function loadHistory(from, to) {
+  try {
+    const end = new Date();
+    const start = new Date(); start.setDate(start.getDate() - 30);
+    const fmt = d => d.toISOString().slice(0,10);
+    const r = await fetch(`https://api.frankfurter.app/${fmt(start)}..${fmt(end)}?from=${from}&to=${to}`);
+    if (!r.ok) return;
+    const d = await r.json();
+    const labels = Object.keys(d.rates).sort();
+    const data = labels.map(k => d.rates[k][to]);
+    drawChart(labels, data, from, to);
+  } catch (e) { /* chart is optional */ }
+}
+
+function drawChart(labels, data, from, to) {
+  document.getElementById('chartTitle').textContent = `${from} → ${to} · last 30 days`;
+  if (chart) chart.destroy();
+  chart = new Chart(document.getElementById('chart'), {
+    type: 'line',
+    data: { labels: labels.map(l => l.slice(5)), datasets: [{
+      data, borderColor: '#00d9ff', backgroundColor: 'rgba(0,217,255,0.08)',
+      fill: true, tension: 0.3, pointRadius: 0, borderWidth: 2
+    }]},
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#8a94a0', maxTicksLimit: 6 }, grid: { color: '#2a333e' } },
+        y: { ticks: { color: '#8a94a0' }, grid: { color: '#2a333e' } }
+      }
+    }
+  });
+}
+
+amountIn.addEventListener('input', () => { clearTimeout(debounce); debounce = setTimeout(convert, 350); });
+fromSel.addEventListener('change', convert);
+toSel.addEventListener('change', convert);
+document.getElementById('swap').addEventListener('click', () => {
+  const t = fromSel.value; fromSel.value = toSel.value; toSel.value = t; convert();
+});
+convert();
+</script>
+</body>
+</html>
