@@ -3,590 +3,770 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aryan Shresthacharya — Full-Stack Developer</title>
-<meta name="description" content="Portfolio of Aryan Shresthacharya — full-stack and mobile developer in Sydney. Web apps, cross-platform apps, and machine learning projects.">
-<meta property="og:title" content="Aryan Shresthacharya — Full-Stack Developer">
-<meta property="og:description" content="Web apps, cross-platform apps, and machine learning projects. Bachelor of IT, Sydney.">
+<title>Aryan Shresthacharya — Developer</title>
+<meta name="description" content="Portfolio of Aryan Shresthacharya — full-stack and mobile developer in Sydney.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;500;600;700;800&family=Inter:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-  :root {
-    --bg:      #FFFFFF;
-    --bg-soft: #FAFAF8;
-    --text:    #1A1A1A;
-    --muted:   #6B7280;
-    --red:     #B91C1C;
-    --border:  #E5E7EB;
-    --serif:   'Noto Serif JP', Georgia, serif;
-    --sans:    'Inter', system-ui, sans-serif;
-  }
+:root {
+  --white:  #ffffff;
+  --soft:   #F7F5F2;
+  --ink:    #111111;
+  --dim:    #888888;
+  --red:    #C0181F;
+  --border: #E2E2E2;
+  --mincho: 'Shippori Mincho B1', 'Georgia', serif;
+  --sans:   'Inter', system-ui, sans-serif;
+  --pad:    clamp(1.5rem, 6vw, 5.5rem);
+}
 
-  html { scroll-behavior: smooth; }
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    * { animation: none !important; transition: none !important; }
-  }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation: none !important; transition: none !important; }
+}
 
-  body {
-    font-family: var(--sans);
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    font-size: 16px;
-  }
+body {
+  font-family: var(--sans);
+  background: var(--white);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
 
-  a { color: inherit; text-decoration: none; }
+a { color: inherit; text-decoration: none; }
 
-  /* NAV */
-  nav {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.25rem clamp(1.5rem, 6vw, 5rem);
-    background: rgba(255,255,255,0.94);
-    backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--border);
-  }
+/* ── NAV ── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.1rem var(--pad);
+  background: rgba(255,255,255,.96);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
 
-  .mark {
-    font-family: var(--serif);
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--red);
-    letter-spacing: -0.01em;
-  }
+.logo {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  font-family: var(--mincho);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  color: var(--ink);
+}
 
-  nav .links {
-    display: flex;
-    gap: 2rem;
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
+.logo-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--red);
+  flex-shrink: 0;
+}
 
-  nav .links a {
-    color: var(--muted);
-    transition: color 0.2s ease;
-    font-weight: 500;
-  }
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+}
 
-  nav .links a:hover { color: var(--red); }
+nav ul a {
+  font-size: .73rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  transition: color .18s;
+}
 
-  /* HERO */
-  .hero {
-    min-height: 84vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 5rem clamp(1.5rem, 6vw, 5rem);
-    border-bottom: 1px solid var(--border);
-    position: relative;
-    overflow: hidden;
-  }
+nav ul a:hover { color: var(--red); }
 
-  .hero-accent {
-    position: absolute;
-    right: clamp(1.5rem, 8vw, 7rem);
-    top: 0;
-    bottom: 0;
-    width: 1px;
-    background: linear-gradient(to bottom, transparent, var(--red) 30%, var(--red) 70%, transparent);
-    opacity: 0.12;
-  }
+/* ── HERO ── */
+.hero {
+  padding: 0 var(--pad);
+  min-height: 88vh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
 
-  .eyebrow {
-    font-size: 0.72rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--red);
-    margin-bottom: 1.8rem;
-    font-weight: 500;
-  }
+.hero-bg-char {
+  position: absolute;
+  right: -0.02em;
+  bottom: -.1em;
+  font-family: var(--mincho);
+  font-size: clamp(14rem, 30vw, 26rem);
+  font-weight: 800;
+  color: var(--red);
+  opacity: .04;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
 
-  .hero h1 {
-    font-family: var(--serif);
-    font-weight: 500;
-    font-size: clamp(2.8rem, 8vw, 5.8rem);
-    line-height: 1.06;
-    max-width: 15ch;
-    letter-spacing: -0.02em;
-  }
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 5rem;
+  padding-bottom: 3rem;
+  position: relative;
+  z-index: 1;
+}
 
-  .hero h1 em {
-    font-style: italic;
-    color: var(--red);
-  }
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  font-size: .68rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 2rem;
+  font-weight: 500;
+}
 
-  .hero p {
-    color: var(--muted);
-    max-width: 52ch;
-    margin-top: 1.8rem;
-    font-size: 1rem;
-    line-height: 1.8;
-  }
+.hero-tag::before {
+  content: '';
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: var(--red);
+}
 
-  .cta {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2.8rem;
-    flex-wrap: wrap;
-  }
+.hero h1 {
+  font-family: var(--mincho);
+  font-weight: 700;
+  font-size: clamp(3rem, 9vw, 7rem);
+  line-height: 1.02;
+  letter-spacing: -.03em;
+  max-width: 12ch;
+}
 
-  /* BUTTONS */
-  .btn {
-    display: inline-block;
-    padding: 0.8rem 1.8rem;
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    border-radius: 1px;
-    transition: all 0.2s ease;
-    cursor: pointer;
-  }
+.hero h1 em {
+  font-style: italic;
+  color: var(--red);
+  font-weight: 500;
+}
 
-  .btn.solid {
-    background: var(--red);
-    color: #fff;
-    border: 1px solid var(--red);
-  }
-  .btn.solid:hover { background: #991B1B; border-color: #991B1B; }
+.hero-sub {
+  color: var(--dim);
+  font-size: .97rem;
+  line-height: 1.8;
+  max-width: 46ch;
+  margin-top: 1.8rem;
+  font-weight: 300;
+}
 
-  .btn.line {
-    border: 1px solid var(--border);
-    color: var(--text);
-  }
-  .btn.line:hover { border-color: var(--red); color: var(--red); }
+.hero-actions {
+  display: flex;
+  gap: .9rem;
+  margin-top: 2.8rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
 
-  /* SECTIONS */
-  section {
-    padding: 5.5rem clamp(1.5rem, 6vw, 5rem);
-    border-bottom: 1px solid var(--border);
-  }
+.btn-red {
+  background: var(--red);
+  color: #fff;
+  font-size: .75rem;
+  font-weight: 500;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  padding: .78rem 1.7rem;
+  border: 1px solid var(--red);
+  transition: background .2s, border-color .2s;
+  cursor: pointer;
+}
 
-  .sec-head {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    margin-bottom: 3rem;
-  }
+.btn-red:hover { background: #9C1016; border-color: #9C1016; }
 
-  .sec-head .n {
-    font-size: 0.68rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--red);
-    font-weight: 500;
-  }
+.btn-ghost {
+  font-size: .75rem;
+  font-weight: 500;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--dim);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1px;
+  transition: color .18s, border-color .18s;
+  cursor: pointer;
+}
 
-  .sec-head h2 {
-    font-family: var(--serif);
-    font-weight: 500;
-    font-size: clamp(1.55rem, 3vw, 2.1rem);
-    letter-spacing: -0.015em;
-  }
+.btn-ghost:hover { color: var(--red); border-color: var(--red); }
 
-  .sec-head .rule {
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
+.hero-foot {
+  border-top: 1px solid var(--border);
+  padding: 1.2rem 0;
+  display: flex;
+  gap: 3rem;
+  position: relative;
+  z-index: 1;
+}
 
-  /* ABOUT */
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 4rem;
-    align-items: start;
-  }
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+}
 
-  .about-grid p {
-    color: var(--muted);
-    margin-bottom: 1.1rem;
-    line-height: 1.85;
-    font-size: 0.97rem;
-  }
+.hero-stat strong {
+  font-family: var(--mincho);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ink);
+}
 
-  .about-grid p b {
-    color: var(--text);
-    font-weight: 500;
-  }
+.hero-stat span {
+  font-size: .68rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  font-weight: 500;
+}
 
-  .skills h3 {
-    font-size: 0.66rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--red);
-    margin: 1.5rem 0 0.45rem;
-    font-weight: 500;
-  }
+/* ── SECTION WRAPPER ── */
+.section {
+  padding: 5rem var(--pad);
+  border-bottom: 1px solid var(--border);
+}
 
-  .skills h3:first-child { margin-top: 0; }
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 3.5rem;
+}
 
-  .skills p {
-    color: var(--muted);
-    font-size: 0.875rem;
-    margin: 0;
-    line-height: 1.65;
-  }
+.section-label .num {
+  font-size: .65rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--red);
+  font-weight: 600;
+}
 
-  /* PROJECT GRID — seam layout */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-    border: 1px solid var(--border);
-    gap: 1px;
-    background: var(--border);
-  }
+.section-label h2 {
+  font-family: var(--mincho);
+  font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+  font-weight: 600;
+  letter-spacing: -.01em;
+}
 
-  .proj {
-    background: var(--bg);
-    padding: 2rem 2rem 1.8rem;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    transition: background 0.2s ease;
-    cursor: default;
-  }
+.section-label .rule {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
 
-  .proj:hover { background: var(--bg-soft); }
+/* ── ABOUT ── */
+.about-wrap {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
 
-  .proj.featured::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--red);
-  }
+.about-text p {
+  color: var(--dim);
+  font-size: .96rem;
+  line-height: 1.9;
+  margin-bottom: 1.1rem;
+  font-weight: 300;
+}
 
-  .proj .idx {
-    font-family: var(--serif);
-    font-style: italic;
-    color: var(--border);
-    font-size: 2rem;
-    line-height: 1;
-    position: absolute;
-    top: 1.2rem;
-    right: 1.5rem;
-    transition: color 0.2s ease, opacity 0.2s ease;
-    font-weight: 400;
-    pointer-events: none;
-  }
+.about-text p strong { color: var(--ink); font-weight: 500; }
 
-  .proj:hover .idx { color: var(--red); opacity: 0.35; }
+.skills-block { border-top: 1px solid var(--border); padding-top: 1.8rem; }
 
-  .proj h3 {
-    font-family: var(--serif);
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-bottom: 0.35rem;
-    padding-right: 3rem;
-    letter-spacing: -0.01em;
-  }
+.skill-row {
+  display: flex;
+  gap: 1rem;
+  padding: .9rem 0;
+  border-bottom: 1px solid var(--border);
+  align-items: baseline;
+}
 
-  .proj .one {
-    color: var(--muted);
-    font-size: 0.875rem;
-    margin-bottom: 1rem;
-    line-height: 1.65;
-  }
+.skill-row .sk-label {
+  font-size: .62rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--red);
+  font-weight: 600;
+  flex-shrink: 0;
+  width: 90px;
+  padding-top: .05rem;
+}
 
-  .proj .tech {
-    font-size: 0.7rem;
-    color: var(--red);
-    margin-bottom: 1.2rem;
-    letter-spacing: 0.05em;
-    font-weight: 500;
-  }
+.skill-row .sk-val {
+  font-size: .85rem;
+  color: var(--dim);
+  line-height: 1.5;
+  font-weight: 300;
+}
 
-  .proj ul {
-    list-style: none;
-    margin-bottom: 1.6rem;
-    flex: 1;
-  }
+/* ── FEATURED PROJECTS ── */
+.feat-list { display: flex; flex-direction: column; }
 
-  .proj li {
-    color: var(--muted);
-    font-size: 0.83rem;
-    padding-left: 1rem;
-    position: relative;
-    margin-bottom: 0.42rem;
-    line-height: 1.55;
-  }
+.feat-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.5rem 2rem;
+  padding: 2.2rem 0;
+  border-bottom: 1px solid var(--border);
+  align-items: start;
+  transition: background .15s;
+  cursor: default;
+}
 
-  .proj li::before {
-    content: '—';
-    position: absolute;
-    left: 0;
-    color: var(--border);
-    font-size: 0.78rem;
-  }
+.feat-item:first-child { border-top: 1px solid var(--border); }
 
-  .proj .actions {
-    display: flex;
-    gap: 0.6rem;
-  }
+.feat-item:hover { background: var(--soft); margin: 0 calc(-1 * var(--pad)); padding: 2.2rem var(--pad); }
 
-  .proj .actions a {
-    font-size: 0.72rem;
-    padding: 0.48rem 1rem;
-    border-radius: 1px;
-    transition: all 0.18s ease;
-    cursor: pointer;
-    letter-spacing: 0.05em;
-    font-weight: 500;
-    text-transform: uppercase;
-  }
+.feat-num {
+  font-family: var(--mincho);
+  font-size: 1.1rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--border);
+  padding-top: .1rem;
+  transition: color .2s;
+  min-width: 1.8rem;
+}
 
-  .a-demo { background: var(--red); color: #fff; border: 1px solid var(--red); }
-  .a-demo:hover { background: #991B1B; border-color: #991B1B; }
+.feat-item:hover .feat-num { color: var(--red); }
 
-  .a-git { border: 1px solid var(--border); color: var(--muted); }
-  .a-git:hover { border-color: var(--red); color: var(--red); }
+.feat-body {}
 
-  /* CONTACT */
-  .contact {
-    text-align: center;
-    border-bottom: none;
-    padding-bottom: 7rem;
-  }
+.feat-body h3 {
+  font-family: var(--mincho);
+  font-size: clamp(1.25rem, 2.5vw, 1.65rem);
+  font-weight: 700;
+  letter-spacing: -.01em;
+  margin-bottom: .3rem;
+}
 
-  .contact-inner { max-width: 540px; margin: 0 auto; }
+.feat-body .one {
+  color: var(--dim);
+  font-size: .88rem;
+  margin-bottom: .7rem;
+  font-weight: 300;
+}
 
-  .contact h2 {
-    font-family: var(--serif);
-    font-weight: 500;
-    font-size: clamp(2rem, 5vw, 3.2rem);
-    letter-spacing: -0.02em;
-    margin-bottom: 1rem;
-    line-height: 1.2;
-  }
+.feat-body .tech {
+  font-size: .67rem;
+  color: var(--red);
+  letter-spacing: .06em;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
 
-  .contact h2 em { font-style: italic; color: var(--red); }
+.feat-body ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+}
 
-  .contact p {
-    color: var(--muted);
-    font-size: 0.97rem;
-    margin-bottom: 2.4rem;
-    line-height: 1.8;
-  }
+.feat-body li {
+  font-size: .83rem;
+  color: var(--dim);
+  padding-left: 1.1rem;
+  position: relative;
+  font-weight: 300;
+  line-height: 1.5;
+}
 
-  .contact .row {
-    display: flex;
-    gap: 0.8rem;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
+.feat-body li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--border);
+  font-size: .76rem;
+}
 
-  /* FOOTER */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 1.5rem clamp(1.5rem, 6vw, 5rem);
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    color: var(--muted);
-    font-size: 0.76rem;
-    background: var(--bg-soft);
-  }
+.feat-action { align-self: start; padding-top: .15rem; }
 
-  footer a { color: var(--red); }
-  footer a:hover { text-decoration: underline; }
+.feat-action a {
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  border: 1px solid var(--border);
+  padding: .42rem .9rem;
+  display: inline-block;
+  transition: all .18s;
+}
 
-  /* REVEAL */
-  .reveal {
-    opacity: 0;
-    transform: translateY(14px);
-    transition: opacity 0.55s ease, transform 0.55s ease;
-  }
-  .reveal.in { opacity: 1; transform: none; }
+.feat-action a:hover { border-color: var(--red); color: var(--red); }
 
-  /* MOBILE */
-  @media (max-width: 760px) {
-    .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-    nav .links { display: none; }
-    .hero { min-height: 70vh; }
-    .hero-accent { display: none; }
-    .grid { grid-template-columns: 1fr; }
-  }
+/* ── MINI PROJECTS ── */
+.mini-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3.5rem;
+}
+
+.mini-label {
+  font-size: .72rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--dim);
+  font-weight: 500;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: -.5rem;
+  grid-column: 1 / -1;
+}
+
+.mini-card {
+  background: var(--soft);
+  padding: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  transition: box-shadow .2s;
+  cursor: default;
+}
+
+.mini-card:hover { box-shadow: inset 2px 0 0 var(--red); }
+
+.mini-card .m-num {
+  font-family: var(--mincho);
+  font-style: italic;
+  color: var(--dim);
+  font-size: .85rem;
+  opacity: .5;
+}
+
+.mini-card h3 {
+  font-family: var(--mincho);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -.01em;
+}
+
+.mini-card .m-one {
+  color: var(--dim);
+  font-size: .82rem;
+  line-height: 1.55;
+  font-weight: 300;
+  flex: 1;
+}
+
+.mini-card .m-tech {
+  font-size: .63rem;
+  color: var(--red);
+  letter-spacing: .06em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.mini-card .m-actions {
+  display: flex;
+  gap: .5rem;
+  margin-top: .4rem;
+}
+
+.mini-card .m-actions a {
+  font-size: .67rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: .38rem .8rem;
+  border: 1px solid var(--border);
+  transition: all .18s;
+  cursor: pointer;
+}
+
+.m-demo { background: var(--red) !important; color: #fff !important; border-color: var(--red) !important; }
+.m-demo:hover { background: #9C1016 !important; border-color: #9C1016 !important; }
+.m-git:hover { border-color: var(--red) !important; color: var(--red) !important; }
+
+/* ── CONTACT ── */
+.contact-section {
+  padding: 6rem var(--pad) 7rem;
+  text-align: center;
+  border-bottom: none;
+}
+
+.contact-inner { max-width: 500px; margin: 0 auto; }
+
+.contact-inner h2 {
+  font-family: var(--mincho);
+  font-size: clamp(2.2rem, 6vw, 3.8rem);
+  font-weight: 700;
+  letter-spacing: -.03em;
+  line-height: 1.1;
+  margin-bottom: 1.1rem;
+}
+
+.contact-inner h2 em { font-style: italic; color: var(--red); font-weight: 500; }
+
+.contact-inner p {
+  color: var(--dim);
+  font-size: .93rem;
+  line-height: 1.8;
+  margin-bottom: 2.4rem;
+  font-weight: 300;
+}
+
+.contact-links {
+  display: flex;
+  gap: .8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  background: var(--soft);
+  padding: 1.4rem var(--pad);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .5rem;
+  font-size: .73rem;
+  color: var(--dim);
+  font-weight: 300;
+}
+
+footer a { color: var(--red); }
+footer a:hover { text-decoration: underline; }
+
+/* ── REVEAL ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.reveal.in { opacity: 1; transform: none; }
+
+/* ── MOBILE ── */
+@media (max-width: 740px) {
+  .about-wrap { grid-template-columns: 1fr; gap: 3rem; }
+  nav ul { display: none; }
+  .hero { min-height: 80vh; }
+  .hero-bg-char { font-size: 50vw; }
+  .hero-foot { gap: 1.8rem; }
+  .feat-item { grid-template-columns: auto 1fr; }
+  .feat-action { grid-column: 2; }
+  .hero-stat strong { font-size: 1.2rem; }
+}
 </style>
 </head>
 <body>
 
 <nav>
-  <a class="mark" href="#top">Aryan S.</a>
-  <div class="links">
-    <a href="#about">About</a>
-    <a href="#projects">Projects</a>
-    <a href="#contact">Contact</a>
-    <a href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a>
-  </div>
+  <a class="logo" href="#top">
+    Aryan S.
+    <span class="logo-dot"></span>
+  </a>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a></li>
+  </ul>
 </nav>
 
 <header class="hero" id="top">
-  <div class="hero-accent"></div>
-  <p class="eyebrow">Sydney, Australia — Full-stack &amp; mobile developer</p>
-  <h1>Aryan builds software that <em>works for people.</em></h1>
-  <p>Bachelor of IT student at Australian Catholic University. I build web apps, cross-platform mobile apps, and machine learning systems — seven projects, all with working code you can run today.</p>
-  <div class="cta">
-    <a class="btn solid" href="#projects">View my work</a>
-    <a class="btn line" href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub profile</a>
+  <div class="hero-bg-char" aria-hidden="true">創</div>
+
+  <div class="hero-content">
+    <p class="hero-tag">Sydney, Australia — Full-stack &amp; mobile developer</p>
+    <h1>Building things that <em>matter.</em></h1>
+    <p class="hero-sub">Bachelor of IT at ACU. I ship web apps, cross-platform mobile apps, and machine learning systems — seven projects, all with real working code.</p>
+    <div class="hero-actions">
+      <a class="btn-red" href="#projects">View my work</a>
+      <a class="btn-ghost" href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub profile →</a>
+    </div>
+  </div>
+
+  <div class="hero-foot">
+    <div class="hero-stat">
+      <strong>7</strong>
+      <span>Projects</span>
+    </div>
+    <div class="hero-stat">
+      <strong>97%</strong>
+      <span>ML accuracy</span>
+    </div>
+    <div class="hero-stat">
+      <strong>3</strong>
+      <span>Languages</span>
+    </div>
   </div>
 </header>
 
-<section id="about">
-  <div class="sec-head"><span class="n">01</span><h2>About</h2><div class="rule"></div></div>
-  <div class="about-grid">
-    <div class="reveal">
-      <p>I'm a developer who learns by <b>shipping real things</b>. My projects range from a medication tracker for elderly users to a real-time sign language recognition system hitting <b>97% accuracy</b> with under 50ms latency.</p>
-      <p>I speak <b>English, Nepali, and Japanese</b> fluently, run a small web management studio called A®, and I'm currently completing my Bachelor of IT at ACU (graduating 2026).</p>
+<section class="section" id="about">
+  <div class="section-label">
+    <span class="num">01</span>
+    <h2>About</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="about-wrap">
+    <div class="about-text reveal">
+      <p>I'm a developer who learns by <strong>shipping real things</strong>. My projects range from a medication tracker for elderly users to a real-time sign language recognition system hitting <strong>97% accuracy</strong> with under 50ms latency.</p>
+      <p>I speak <strong>English, Nepali, and Japanese</strong> fluently, run a small web studio called A®, and I'm completing my Bachelor of IT at ACU (graduating 2026).</p>
       <p>What I care about: software that's accessible, fast, and actually useful for the person on the other side of the screen.</p>
     </div>
-    <div class="skills reveal">
-      <h3>Languages</h3>
-      <p>Python · C# · JavaScript · TypeScript · Kotlin · SQL</p>
-      <h3>Web &amp; mobile</h3>
-      <p>ASP.NET Core · .NET MAUI · React · Jetpack Compose · Tailwind CSS · PWA</p>
-      <h3>Machine learning</h3>
-      <p>scikit-learn · MediaPipe · OpenCV · TensorFlow/Keras</p>
-      <h3>Tools</h3>
-      <p>Git · GitHub · xUnit · EF Core · SQLite · REST APIs · Vercel</p>
+    <div class="skills-block reveal">
+      <div class="skill-row">
+        <span class="sk-label">Languages</span>
+        <span class="sk-val">Python · C# · JavaScript · TypeScript · Kotlin · SQL</span>
+      </div>
+      <div class="skill-row">
+        <span class="sk-label">Web &amp; Mobile</span>
+        <span class="sk-val">ASP.NET Core · .NET MAUI · React · Jetpack Compose · Tailwind · PWA</span>
+      </div>
+      <div class="skill-row">
+        <span class="sk-label">ML</span>
+        <span class="sk-val">scikit-learn · MediaPipe · OpenCV · TensorFlow/Keras</span>
+      </div>
+      <div class="skill-row">
+        <span class="sk-label">Tools</span>
+        <span class="sk-val">Git · GitHub · xUnit · EF Core · SQLite · REST APIs · Vercel</span>
+      </div>
     </div>
   </div>
 </section>
 
-<section id="projects">
-  <div class="sec-head"><span class="n">02</span><h2>Projects</h2><div class="rule"></div></div>
-  <div class="grid">
+<section class="section" id="projects">
+  <div class="section-label">
+    <span class="num">02</span>
+    <h2>Work</h2>
+    <div class="rule"></div>
+  </div>
 
-    <article class="proj featured reveal">
-      <span class="idx">i</span>
-      <h3>SignBridge</h3>
-      <p class="one">Real-time sign language recognition on the desktop.</p>
-      <p class="tech">Python · PyQt6 · MediaPipe · scikit-learn · OpenCV</p>
-      <ul>
-        <li>97% accuracy on static signs, 89% on dynamic gestures</li>
-        <li>Under 50ms latency, runs fully offline</li>
-        <li>Built-in training workflow and text-to-speech output</li>
-        <li>Browser gesture-control demo included</li>
-      </ul>
-      <div class="actions">
-        <a class="a-git" href="https://github.com/Aryan39-ai/SLRS" target="_blank" rel="noopener">GitHub</a>
+  <div class="feat-list">
+
+    <article class="feat-item reveal">
+      <span class="feat-num">i</span>
+      <div class="feat-body">
+        <h3>SignBridge</h3>
+        <p class="one">Real-time sign language recognition on the desktop.</p>
+        <p class="tech">Python · PyQt6 · MediaPipe · scikit-learn · OpenCV</p>
+        <ul>
+          <li>97% accuracy on static signs, 89% on dynamic gestures</li>
+          <li>Under 50ms latency, runs fully offline</li>
+          <li>Built-in training workflow and text-to-speech output</li>
+        </ul>
+      </div>
+      <div class="feat-action">
+        <a href="https://github.com/Aryan39-ai/SLRS" target="_blank" rel="noopener">GitHub</a>
       </div>
     </article>
 
-    <article class="proj featured reveal">
-      <span class="idx">ii</span>
-      <h3>MediRemind</h3>
-      <p class="one">Medication adherence tracking for elderly users and their caregivers.</p>
-      <p class="tech">ASP.NET Core 8 · EF Core · SQLite · Tailwind · BCrypt · PWA</p>
-      <ul>
-        <li>Today's-dose dashboard with full medication CRUD</li>
-        <li>30-day adherence history and caregiver read-only access</li>
-        <li>Accessibility-first: large tap targets, high contrast mode</li>
-      </ul>
-      <div class="actions">
-        <a class="a-git" href="https://github.com/Aryan39-ai/MediRemind" target="_blank" rel="noopener">GitHub</a>
+    <article class="feat-item reveal">
+      <span class="feat-num">ii</span>
+      <div class="feat-body">
+        <h3>MediRemind</h3>
+        <p class="one">Medication adherence tracking for elderly users and their caregivers.</p>
+        <p class="tech">ASP.NET Core 8 · EF Core · SQLite · Tailwind · BCrypt · PWA</p>
+        <ul>
+          <li>Today's-dose dashboard with full medication CRUD</li>
+          <li>30-day adherence history and caregiver read-only access</li>
+          <li>Accessibility-first: large tap targets, high contrast mode</li>
+        </ul>
+      </div>
+      <div class="feat-action">
+        <a href="https://github.com/Aryan39-ai/MediRemind" target="_blank" rel="noopener">GitHub</a>
       </div>
     </article>
 
-    <article class="proj featured reveal">
-      <span class="idx">iii</span>
-      <h3>WeatherApp</h3>
-      <p class="one">Cross-platform weather with a hand-built particle animation engine.</p>
-      <p class="tech">.NET MAUI · C# · XAML · OpenWeatherMap · xUnit</p>
-      <ul>
-        <li>One C# codebase for Android, iOS, macOS, and Windows</li>
-        <li>Custom IDrawable engine animating 8 weather states</li>
-        <li>xUnit test suite for JSON parsing and formatting</li>
-      </ul>
-      <div class="actions">
-        <a class="a-git" href="https://github.com/Aryan39-ai/WeatherApp" target="_blank" rel="noopener">GitHub</a>
+    <article class="feat-item reveal">
+      <span class="feat-num">iii</span>
+      <div class="feat-body">
+        <h3>WeatherApp</h3>
+        <p class="one">Cross-platform weather with a hand-built particle animation engine.</p>
+        <p class="tech">.NET MAUI · C# · XAML · OpenWeatherMap · xUnit</p>
+        <ul>
+          <li>One C# codebase for Android, iOS, macOS, and Windows</li>
+          <li>Custom IDrawable engine animating 8 weather states</li>
+          <li>xUnit test suite for JSON parsing and formatting</li>
+        </ul>
+      </div>
+      <div class="feat-action">
+        <a href="https://github.com/Aryan39-ai/WeatherApp" target="_blank" rel="noopener">GitHub</a>
       </div>
     </article>
 
-    <article class="proj reveal">
-      <span class="idx">iv</span>
+  </div>
+
+  <div class="mini-grid">
+    <p class="mini-label">Live demos</p>
+
+    <article class="mini-card reveal">
+      <span class="m-num">iv</span>
       <h3>Currency Converter</h3>
-      <p class="one">Live conversion across 15 currencies with a 30-day trend chart.</p>
-      <p class="tech">JavaScript · Chart.js · Frankfurter API</p>
-      <ul>
-        <li>Live ECB exchange rates, no signup required</li>
-        <li>Historical rate chart for any currency pair</li>
-        <li>Instant swap and debounced live conversion</li>
-      </ul>
-      <div class="actions">
-        <a class="a-demo" href="./currency-converter/">Live demo</a>
-        <a class="a-git" href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a>
+      <p class="m-one">Live conversion across 15 currencies with a 30-day trend chart.</p>
+      <p class="m-tech">JavaScript · Chart.js · Frankfurter API</p>
+      <div class="m-actions">
+        <a class="m-demo" href="./currency-converter/">Live demo</a>
+        <a class="m-git" href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a>
       </div>
     </article>
 
-    <article class="proj reveal">
-      <span class="idx">v</span>
+    <article class="mini-card reveal">
+      <span class="m-num">v</span>
       <h3>Expense Tracker</h3>
-      <p class="one">Personal expense tracking with live charts and CSV export.</p>
-      <p class="tech">JavaScript · Chart.js · localStorage</p>
-      <ul>
-        <li>Category breakdown with doughnut chart</li>
-        <li>Monthly and all-time summaries</li>
-        <li>One-click CSV export, data never leaves the device</li>
-      </ul>
-      <div class="actions">
-        <a class="a-demo" href="./expense-tracker/">Live demo</a>
-        <a class="a-git" href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a>
+      <p class="m-one">Personal expense tracking with live charts and CSV export.</p>
+      <p class="m-tech">JavaScript · Chart.js · localStorage</p>
+      <div class="m-actions">
+        <a class="m-demo" href="./expense-tracker/">Live demo</a>
+        <a class="m-git" href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a>
       </div>
     </article>
 
-    <article class="proj reveal">
-      <span class="idx">vi</span>
+    <article class="mini-card reveal">
+      <span class="m-num">vi</span>
       <h3>GitHub Lookup</h3>
-      <p class="one">Search any GitHub user — profile, top repos, language stats.</p>
-      <p class="tech">JavaScript · GitHub REST API</p>
-      <ul>
-        <li>Language distribution bar computed from live repo data</li>
-        <li>Top repositories ranked by stars</li>
-        <li>Graceful handling of rate limits and missing users</li>
-      </ul>
-      <div class="actions">
-        <a class="a-demo" href="./github-lookup/">Live demo</a>
-        <a class="a-git" href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a>
+      <p class="m-one">Search any GitHub user — profile, top repos, language stats.</p>
+      <p class="m-tech">JavaScript · GitHub REST API</p>
+      <div class="m-actions">
+        <a class="m-demo" href="./github-lookup/">Live demo</a>
+        <a class="m-git" href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a>
       </div>
     </article>
 
-    <article class="proj reveal">
-      <span class="idx">vii</span>
+    <article class="mini-card reveal">
+      <span class="m-num">vii</span>
       <h3>Pomodoro Timer</h3>
-      <p class="one">A focused work timer with custom durations and session tracking.</p>
-      <p class="tech">JavaScript · Web Audio · localStorage · SVG</p>
-      <ul>
-        <li>Animated SVG progress ring</li>
-        <li>Auto-cycles focus, short and long breaks</li>
-        <li>Daily session counter persisted locally</li>
-      </ul>
-      <div class="actions">
-        <a class="a-demo" href="./pomodoro/">Live demo</a>
-        <a class="a-git" href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a>
+      <p class="m-one">Focused work timer with custom durations and session tracking.</p>
+      <p class="m-tech">JavaScript · Web Audio · localStorage · SVG</p>
+      <div class="m-actions">
+        <a class="m-demo" href="./pomodoro/">Live demo</a>
+        <a class="m-git" href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a>
       </div>
     </article>
 
   </div>
 </section>
 
-<section class="contact" id="contact">
+<section class="contact-section" id="contact">
   <div class="contact-inner">
     <h2>Let's build something <em>together.</em></h2>
-    <p>I'm open to junior developer roles, internships, and freelance web work in Sydney or remote.</p>
-    <div class="row">
-      <a class="btn solid" href="mailto:rnacharya39@gmail.com">rnacharya39@gmail.com</a>
-      <a class="btn line" href="https://www.linkedin.com/in/aryan-shresthacharya-405b1b30a/" target="_blank" rel="noopener">LinkedIn</a>
-      <a class="btn line" href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a>
+    <p>Open to junior developer roles, internships, and freelance web work in Sydney or remote.</p>
+    <div class="contact-links">
+      <a class="btn-red" href="mailto:rnacharya39@gmail.com">rnacharya39@gmail.com</a>
+      <a class="btn-ghost" href="https://www.linkedin.com/in/aryan-shresthacharya-405b1b30a/" target="_blank" rel="noopener">LinkedIn →</a>
+      <a class="btn-ghost" href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub →</a>
     </div>
   </div>
 </section>
@@ -597,10 +777,10 @@
 </footer>
 
 <script>
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
-}, { threshold: 0.1 });
-document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: .1 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 </script>
 
 </body>
