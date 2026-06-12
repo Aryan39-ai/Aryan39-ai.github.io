@@ -122,6 +122,21 @@ nav {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
+  transition: transform .45s var(--ease-out);
+}
+
+body.nav-hidden nav { transform: translateY(-100%); }
+body.menu-open nav { transform: none !important; }
+
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: left;
+  z-index: 250;
+  pointer-events: none;
 }
 
 .logo {
@@ -370,6 +385,7 @@ body.ready .line:nth-child(2) > span { transition-delay: .15s; }
   opacity: 1;
 }
 
+.js .hero-status,
 .js .hero-role,
 .js .hero-sub,
 .js .hero-actions,
@@ -379,10 +395,38 @@ body.ready .line:nth-child(2) > span { transition-delay: .15s; }
   transition: opacity .8s ease, transform .8s var(--ease-out);
 }
 
-body.ready .hero-role  { opacity: 1; transform: none; transition-delay: .4s; }
-body.ready .hero-sub   { opacity: 1; transform: none; transition-delay: .5s; }
-body.ready .hero-actions { opacity: 1; transform: none; transition-delay: .6s; }
-body.ready .hero-foot  { opacity: 1; transform: none; transition-delay: .75s; }
+body.ready .hero-status { opacity: 1; transform: none; transition-delay: .35s; }
+body.ready .hero-role  { opacity: 1; transform: none; transition-delay: .45s; }
+body.ready .hero-sub   { opacity: 1; transform: none; transition-delay: .55s; }
+body.ready .hero-actions { opacity: 1; transform: none; transition-delay: .65s; }
+body.ready .hero-foot  { opacity: 1; transform: none; transition-delay: .8s; }
+
+.hero-status {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  font-size: .67rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--dim);
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.hero-status::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--red);
+  flex-shrink: 0;
+  animation: pulse-dot 2.2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(192, 24, 31, .35); }
+  50%      { box-shadow: 0 0 0 7px rgba(192, 24, 31, 0); }
+}
 
 .hero-role {
   font-size: .9rem;
@@ -603,9 +647,10 @@ body.ready .hero-foot  { opacity: 1; transform: none; transition-delay: .75s; }
 
 .section-label h2 {
   font-family: var(--mincho);
-  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
   font-weight: 700;
-  letter-spacing: -.01em;
+  letter-spacing: -.02em;
+  line-height: 1;
 }
 
 .section-label .jp-label {
@@ -927,6 +972,39 @@ body.ready .hero-foot  { opacity: 1; transform: none; transition-delay: .75s; }
   font-weight: 300;
 }
 
+.contact-mail {
+  display: inline-block;
+  font-family: var(--mincho);
+  font-size: clamp(1.35rem, 4.5vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  position: relative;
+  margin-bottom: 2.2rem;
+  transition: color .25s;
+  word-break: break-all;
+}
+
+.contact-mail::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 100%;
+  height: 2px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform .5s var(--ease-out);
+}
+
+.contact-mail:hover { color: var(--red); }
+
+.contact-mail:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
 .contact-links {
   display: flex;
   gap: 1.6rem;
@@ -964,6 +1042,32 @@ footer a:hover { text-decoration: underline; }
 
 .js .reveal.in { opacity: 1; transform: none; }
 
+/* ───────────────────────── CURSOR RING (desktop) ───────────────────────── */
+.cursor-ring {
+  position: fixed;
+  top: 0; left: 0;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--red);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 998;
+  opacity: .55;
+  will-change: transform;
+  transition: width .25s var(--ease-out), height .25s var(--ease-out),
+              opacity .3s ease, background-color .25s ease;
+}
+
+.cursor-ring.is-active {
+  width: 52px;
+  height: 52px;
+  opacity: 1;
+  background-color: rgba(192, 24, 31, .06);
+}
+
+.btn-red { transition: transform .3s var(--ease-out); }
+.menu-btn { transition: transform .3s var(--ease-out), color .2s; }
+
 /* ───────────────────────── REDUCED MOTION ───────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -994,6 +1098,8 @@ footer a:hover { text-decoration: underline; }
 </style>
 </head>
 <body class="loading">
+
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
 <!-- PRELOADER -->
 <div class="preloader" id="preloader" aria-hidden="true">
@@ -1041,6 +1147,7 @@ footer a:hover { text-decoration: underline; }
   <div class="hero-bg-char" id="heroKanji" aria-hidden="true">創</div>
 
   <div class="hero-content">
+    <p class="hero-status">Open to opportunities — 2026</p>
     <h1>
       <span class="line"><span>Aryan</span></span>
       <span class="line"><span>Shresthacharya</span></span>
@@ -1237,8 +1344,8 @@ footer a:hover { text-decoration: underline; }
   <div class="contact-inner reveal">
     <h2>Let's build something <em>together.</em></h2>
     <p>Open to junior developer roles, internships, and freelance web work in Sydney or remote.</p>
+    <a class="contact-mail" href="mailto:rnacharya39@gmail.com">rnacharya39@gmail.com</a>
     <div class="contact-links">
-      <a class="btn-red" href="mailto:rnacharya39@gmail.com"><span>rnacharya39@gmail.com</span></a>
       <a class="link-line" href="https://www.linkedin.com/in/aryan-shresthacharya-405b1b30a/" target="_blank" rel="noopener">LinkedIn</a>
       <a class="link-line" href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a>
     </div>
@@ -1343,6 +1450,76 @@ footer a:hover { text-decoration: underline; }
       });
     }, { passive: true });
   }
+
+  /* ── Cursor ring + magnetic buttons (fine-pointer devices only) ── */
+  var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (finePointer && !reduceMotion) {
+    var ring = document.createElement('div');
+    ring.className = 'cursor-ring';
+    document.body.appendChild(ring);
+
+    var tx = -100, ty = -100, rx = -100, ry = -100;
+    document.addEventListener('mousemove', function (e) {
+      tx = e.clientX;
+      ty = e.clientY;
+      ring.style.opacity = '';
+    }, { passive: true });
+
+    document.documentElement.addEventListener('mouseleave', function () {
+      ring.style.opacity = '0';
+    });
+
+    (function follow() {
+      rx += (tx - rx) * 0.18;
+      ry += (ty - ry) * 0.18;
+      ring.style.transform = 'translate(' + rx + 'px,' + ry + 'px) translate(-50%,-50%)';
+      requestAnimationFrame(follow);
+    })();
+
+    document.addEventListener('mouseover', function (e) {
+      if (e.target.closest('a, button')) ring.classList.add('is-active');
+    });
+    document.addEventListener('mouseout', function (e) {
+      if (e.target.closest('a, button')) ring.classList.remove('is-active');
+    });
+
+    document.querySelectorAll('.btn-red, .menu-btn').forEach(function (el) {
+      el.addEventListener('mousemove', function (e) {
+        var r = el.getBoundingClientRect();
+        var dx = (e.clientX - r.left - r.width / 2) * 0.22;
+        var dy = (e.clientY - r.top - r.height / 2) * 0.22;
+        el.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+      });
+      el.addEventListener('mouseleave', function () {
+        el.style.transform = '';
+      });
+    });
+  }
+
+  /* ── Smart nav + scroll progress ── */
+  var progressBar = document.getElementById('scrollProgress');
+  var lastY = window.scrollY || 0;
+  var navTick = false;
+  window.addEventListener('scroll', function () {
+    if (navTick) return;
+    navTick = true;
+    requestAnimationFrame(function () {
+      var y = window.scrollY;
+      if (progressBar) {
+        var max = document.documentElement.scrollHeight - window.innerHeight;
+        progressBar.style.transform = 'scaleX(' + (max > 0 ? Math.min(y / max, 1) : 0) + ')';
+      }
+      if (!document.body.classList.contains('menu-open')) {
+        if (y > lastY + 4 && y > 420) {
+          document.body.classList.add('nav-hidden');
+        } else if (y < lastY - 4 || y <= 420) {
+          document.body.classList.remove('nav-hidden');
+        }
+      }
+      lastY = y;
+      navTick = false;
+    });
+  }, { passive: true });
 
   /* ── Stat counters ── */
   var countersStarted = false;
