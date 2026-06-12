@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,18 +20,20 @@ document.documentElement.classList.add('js');
 
 /* ───────── 2. DESIGN TOKENS ───────── */
 :root {
-  --color-dark:   #121212;
-  --color-light:  #ffffff;
-  --color-bg:     var(--color-dark);
-  --color-text:   var(--color-light);
-  --color-red:    #ff5541;
-  --color-blue:   #5595ff;
-  --color-green:  #51b75a;
-  --color-yellow: #ffdd4b;
+  --dark:  #121212;
+  --light: #ffffff;
+  --bg:    var(--dark);
+  --text:  var(--light);
+  --red:   #ff5541;
 
-  --grey-80: color-mix(in hsl, var(--color-bg) 80%, var(--color-text) 20%);
-  --grey-40: color-mix(in hsl, var(--color-bg) 40%, var(--color-text) 60%);
-  --grey-20: color-mix(in hsl, var(--color-bg) 20%, var(--color-text) 80%);
+  /* Per-section accent colors */
+  --accent-web:    #5595ff;
+  --accent-uiux:   #ffdd4b;
+  --accent-ml:     #ff5541;
+  --accent-studio: #51b75a;
+
+  --grey-80: color-mix(in hsl, var(--bg) 80%, var(--text) 20%);
+  --grey-40: color-mix(in hsl, var(--bg) 40%, var(--text) 60%);
 
   --gap:       clamp(1rem, 1.25vw, 1.25rem);
   --gap-2:     calc(var(--gap) * 2);
@@ -40,20 +42,19 @@ document.documentElement.classList.add('js');
 
   --font-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
   --font-body:    'Host Grotesk', Arial, sans-serif;
-  --font-nav:     clamp(0.75rem, 0.875vw, 0.875rem);
 }
 
 html.is-light {
-  --color-bg:   #f0f0ed;
-  --color-text: #121212;
+  --bg:   #f0f0ed;
+  --text: #121212;
 }
 
 html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-body);
-  background: var(--color-bg);
-  color: var(--color-text);
+  background: var(--bg);
+  color: var(--text);
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -63,68 +64,82 @@ body {
 body.menu-open { overflow: hidden; }
 
 a { color: inherit; text-decoration: none; }
+::selection { background: var(--red); color: #fff; }
 
-::selection { background: var(--color-red); color: #fff; }
+.sub-page[hidden], #page-home[hidden] { display: none !important; }
 
-/* ───────── 4. PRELOADER ───────── */
-.preloader-w {
+/* ───────── ① PRELOADER ───────── */
+.preloader {
   position: fixed;
   inset: 0;
   z-index: 9999;
   background: #ffffff;
   display: none;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  pointer-events: none;
+  flex-direction: column;
 }
 
-.js .preloader-w { display: flex; }
+.js .preloader { display: flex; }
+body.site-ready .preloader { display: none; }
 
-body.site-ready .preloader-w { display: none; }
-
-.preloader-logo-w {
+.preloader-logo {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 8vw, 7rem);
-  letter-spacing: -0.02em;
+  font-size: clamp(4rem, 10vw, 9rem);
   color: #121212;
   text-transform: uppercase;
+  letter-spacing: -0.02em;
+  position: relative;
+  z-index: 2;
   line-height: 1;
 }
 
-.preloader-logo-w sup { font-size: .4em; color: #ff5541; }
+.preloader-logo span { font-size: .45em; vertical-align: super; color: var(--red); }
 
-/* Red diagonal slash — same as steven.com */
-.preloader-line {
+.preloader-lines {
   position: absolute;
-  width: 40vw;
-  height: 2px;
-  background: var(--color-red);
-  transform: rotate(-12deg);
-  transform-origin: left center;
+  width: 50vw;
+  height: 15vw;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  overflow: visible;
+  z-index: 1;
 }
 
-.preloader-text-w {
-  margin-top: 2.5rem;
-  font-size: .7rem;
-  letter-spacing: .3em;
-  text-transform: uppercase;
-  color: #888;
+.line-red, .line-grey {
+  stroke-dasharray: 500;
+  stroke-dashoffset: 500;
 }
 
-/* ───────── 5a. NAVIGATION ───────── */
-.nav-w {
+.preloader-count {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-body);
+  font-size: .75rem;
+  letter-spacing: .1em;
+  color: #999;
+}
+
+.preloader-dot {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 16px; height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 50%;
+  background: var(--red);
+  opacity: 0;
+  z-index: 3;
+}
+
+/* ───────── ② NAV ───────── */
+.nav {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 1000;
-  padding: 0 var(--container);
   height: 56px;
-  display: flex;
-  align-items: center;
-}
-
-.nav-inner {
-  width: 100%;
+  padding: 0 var(--container);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -135,55 +150,51 @@ body.site-ready .preloader-w { display: none; }
   font-size: 1.4rem;
   letter-spacing: .05em;
   text-transform: uppercase;
-  color: var(--color-text);
   line-height: 1;
+  cursor: pointer;
 }
 
-.brand-reg { font-size: .7em; vertical-align: super; color: var(--color-red); }
+.nav-brand sup { font-size: .7em; color: var(--red); }
 
-/* Clock widget */
-.nav-clock-w {
+.nav-clock {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  font-size: var(--font-nav);
-  letter-spacing: .12em;
-  color: var(--grey-40);
-  font-family: var(--font-body);
-  text-transform: uppercase;
   display: flex;
   align-items: center;
   gap: 4px;
+  font-size: .78rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--grey-40);
 }
 
-.nav-clock-inner { display: flex; align-items: center; gap: 4px; }
-.br-l, .br-r { opacity: .5; }
-.nav-city { font-weight: 600; color: var(--color-text); }
-.nav-time { font-variant-numeric: tabular-nums; }
+.clock-open, .clock-close { opacity: .5; }
+.clock-city { font-weight: 600; color: var(--text); }
+.clock-time { font-variant-numeric: tabular-nums; margin-left: 4px; }
 
-/* Menu button */
 .nav-menu-btn {
   font-family: var(--font-display);
   font-size: .95rem;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: var(--color-text);
+  color: var(--text);
   background: none;
   border: none;
   cursor: pointer;
   padding: .4rem 0;
-  z-index: 1001;
-  position: relative;
   transition: color .2s;
+  position: relative;
+  z-index: 1001;
 }
 
-.nav-menu-btn:hover { color: var(--color-red); }
+.nav-menu-btn:hover { color: var(--red); }
 
-/* ───────── 5c. MENU OVERLAY ───────── */
+/* ───────── ③ MENU OVERLAY ───────── */
 .menu-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 998;
+  z-index: 700;
   background: rgba(0, 0, 0, .55);
   opacity: 0;
   visibility: hidden;
@@ -203,9 +214,9 @@ body.menu-open .menu-backdrop {
   height: 100vh;
   height: 100dvh;
   background: #ffffff;
-  z-index: 999;
+  z-index: 800;
   transform: translateX(100%);
-  transition: transform .5s cubic-bezier(.76, 0, .24, 1);
+  transition: transform .55s cubic-bezier(.76, 0, .24, 1);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -215,104 +226,96 @@ body.menu-open .menu-backdrop {
 
 body.menu-open .nav-menu { transform: translateX(0); }
 
-.nav-links { display: flex; flex-direction: column; }
+.nav-menu nav { display: flex; flex-direction: column; }
 
-.nav-link {
+.menu-link {
   display: flex;
   align-items: center;
   gap: 1.5rem;
   font-family: var(--font-display);
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: clamp(2.2rem, 5vw, 4rem);
   text-transform: uppercase;
   letter-spacing: -.02em;
-  color: #9b9b9b;
+  color: #aaaaaa;
   position: relative;
+  padding: .2rem 0;
   overflow: hidden;
-  padding: .25rem 0;
   transition: color .15s;
-  line-height: 1.1;
+  line-height: 1.05;
 }
 
-.nav-link:hover { color: #121212; }
+.menu-link:hover { color: #121212; }
 
-/* Red strikethrough diagonal on hover */
-.nav-link::after {
+.menu-link::after {
   content: '';
   position: absolute;
-  left: -5%;
-  top: 50%;
-  width: 110%;
-  height: 2px;
-  background: var(--color-red);
-  transform: rotate(-4deg) scaleX(0);
+  left: -5%; top: 55%;
+  width: 110%; height: 2px;
+  background: var(--red);
+  transform: rotate(-3deg) scaleX(0);
   transform-origin: left center;
-  transition: transform .3s cubic-bezier(.76, 0, .24, 1);
+  transition: transform .35s cubic-bezier(.76, 0, .24, 1);
 }
 
-.nav-link:hover::after { transform: rotate(-4deg) scaleX(1); }
+.menu-link:hover::after { transform: rotate(-3deg) scaleX(1); }
 
-/* Bracket indicator */
-.link-bracket {
+.menu-link.is-cta { color: var(--red); margin-top: 1rem; }
+.menu-link.is-cta:hover { color: #121212; }
+
+.ml-bracket {
   font-size: .4em;
-  letter-spacing: .2em;
-  opacity: .6;
+  letter-spacing: .3em;
+  opacity: .5;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
 }
 
-.link-bracket .dot {
+.ml-bracket i {
   width: 8px; height: 8px;
   border-radius: 50%;
   border: 1.5px solid currentColor;
   background: transparent;
+  font-style: normal;
   display: inline-block;
+  transition: background .15s;
 }
 
-.nav-link:hover .link-bracket .dot { background: currentColor; }
+.menu-link:hover .ml-bracket i { background: currentColor; }
 
-.nav-footer {
+.nav-menu footer {
   margin-top: 3rem;
-  display: flex;
-  flex-direction: column;
-  gap: .4rem;
-  font-size: .75rem;
+  font-size: .72rem;
   letter-spacing: .08em;
   color: #888;
 }
 
-.nav-footer a { color: #555; transition: color .2s; }
-.nav-footer a:hover { color: var(--color-red); }
-
-/* ───────── 7. HERO SECTION ───────── */
-.page-w { transition: opacity .4s ease; }
-body.menu-open .page-w { opacity: .3; }
-
-.hero-s {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  height: 100svh;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
+/* ───────── ④ IRIS OVERLAY ───────── */
+.iris-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  pointer-events: none;
 }
 
-.hero-layout {
-  width: 100%;
-  height: 100%;
+/* ───────── ⑤ HOMEPAGE HERO ───────── */
+body.menu-open .page { opacity: .25; transition: opacity .4s; }
+.page { transition: opacity .4s; }
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1.1fr;
   align-items: center;
-  padding: 0 var(--container);
-  padding-top: 56px;
+  padding: 80px var(--container) 110px;
   gap: var(--gap-2);
+  overflow: hidden;
 }
 
-.hero-content {
-  position: relative;
-  z-index: 2;
-}
+.hero-content { position: relative; z-index: 2; }
 
 .hero-headline {
   font-family: var(--font-display);
@@ -321,38 +324,22 @@ body.menu-open .page-w { opacity: .3; }
   text-transform: uppercase;
   line-height: .92;
   letter-spacing: -.02em;
-  color: var(--color-text);
-  margin: 0 0 var(--gap-2);
-}
-
-.hero-headline .word { display: inline-block; overflow: hidden; vertical-align: top; }
-.hero-headline .word-inner { display: inline-block; }
-
-.hero-sub {
-  font-size: .875rem;
-  color: var(--grey-40);
-  letter-spacing: .04em;
   margin-bottom: var(--gap-2);
+  display: flex;
+  flex-direction: column;
 }
 
-/* ───────── 8. CTA BUTTON ───────── */
-.btn-w.is-main {
+.hero-headline .hw { display: inline-block; }
+
+.cta-btn {
   display: inline-flex;
   align-items: center;
   gap: .75rem;
-  color: var(--color-text);
-}
-
-.btn-inner {
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-  font-family: var(--font-body);
   font-size: .875rem;
   letter-spacing: .04em;
 }
 
-.btn-arrow-circle {
+.cta-circle {
   width: 36px; height: 36px;
   border-radius: 50%;
   border: 1px solid var(--grey-40);
@@ -362,52 +349,43 @@ body.menu-open .page-w { opacity: .3; }
   transition: background .2s, transform .2s;
 }
 
-.btn-arrow-circle svg {
-  width: 16px; height: 16px;
-  stroke: var(--color-text);
+.cta-circle svg {
+  width: 14px; height: 14px;
+  stroke: var(--text);
   fill: none;
-  stroke-width: 2;
+  stroke-width: 1.5;
   transition: stroke .2s;
 }
 
-.btn-w.is-main:hover .btn-arrow-circle {
-  background: var(--color-text);
-  transform: rotate(45deg);
-}
+.cta-btn:hover .cta-circle { background: var(--text); transform: rotate(45deg); }
+.cta-btn:hover .cta-circle svg { stroke: var(--bg); }
 
-.btn-w.is-main:hover .btn-arrow-circle svg { stroke: var(--color-bg); }
-
-/* Right: dial */
-.hero-dial-w {
+/* ───────── THE WHEEL ───────── */
+.wheel-container {
   position: relative;
   width: 100%;
-  height: 80vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  max-width: min(80vh, 100%);
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
 }
 
-.hero-dial-w.no-3d { display: none; }
-
-#dial-mount {
+.wheel-canvas {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
-#dial-mount canvas { display: block; }
-
-/* Curved labels over the dial */
-.dial-labels {
+.wheel-labels {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: min(80vh, 100%);
-  aspect-ratio: 1 / 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
+  transform-origin: 50% 50%;
 }
 
-.arc-text {
+.wl {
   font-family: var(--font-body);
   font-size: 14px;
   letter-spacing: 4px;
@@ -415,28 +393,25 @@ body.menu-open .page-w { opacity: .3; }
   text-transform: uppercase;
 }
 
-/* Arm links below dial */
-.hero-arm-links-w {
+/* Arm navigation (bottom of hero) */
+.arm-nav {
   position: absolute;
   bottom: var(--gap-2);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: var(--gap);
-  opacity: 0;
-  transition: opacity .3s;
+  gap: .5rem;
+  flex-wrap: wrap;
+  justify-content: center;
   z-index: 3;
+  width: max-content;
+  max-width: calc(100vw - 2 * var(--container));
 }
 
-.hero-s:hover .hero-arm-links-w { opacity: 1; }
-@media (hover: none) { .hero-arm-links-w { opacity: 1; } }
-
-.hero-arm-track { display: flex; gap: .5rem; flex-wrap: wrap; justify-content: center; }
-
-.btn-arm {
+.arm-btn {
   font-family: var(--font-body);
-  font-size: .75rem;
+  font-size: .72rem;
   letter-spacing: .1em;
   text-transform: uppercase;
   color: var(--grey-40);
@@ -448,13 +423,9 @@ body.menu-open .page-w { opacity: .3; }
   transition: color .2s, border-color .2s;
 }
 
-.btn-arm.active,
-.btn-arm:hover {
-  color: var(--color-text);
-  border-color: var(--grey-40);
-}
+.arm-btn.active, .arm-btn:hover { color: var(--text); border-color: var(--grey-40); }
 
-.hero-arm-nav { display: flex; gap: .4rem; }
+.arm-arrows { display: flex; gap: .4rem; margin-left: .5rem; }
 
 .arm-prev, .arm-next {
   width: 30px; height: 30px;
@@ -467,9 +438,9 @@ body.menu-open .page-w { opacity: .3; }
   transition: color .2s, border-color .2s;
 }
 
-.arm-prev:hover, .arm-next:hover { color: var(--color-text); border-color: var(--grey-40); }
+.arm-prev:hover, .arm-next:hover { color: var(--text); border-color: var(--grey-40); }
 
-/* ───────── SECTIONS ───────── */
+/* ───────── HOMEPAGE SECTIONS ───────── */
 .section {
   padding: var(--gap-3) var(--container);
   border-top: 1px solid var(--grey-80);
@@ -482,25 +453,18 @@ body.menu-open .page-w { opacity: .3; }
   margin-bottom: var(--gap-3);
 }
 
-.section-head .s-num {
-  font-family: var(--font-body);
-  font-size: .7rem;
-  letter-spacing: .2em;
-  color: var(--color-red);
-}
+.section-head .s-num { font-size: .7rem; letter-spacing: .2em; color: var(--red); }
 
 .section-head h2 {
   font-family: var(--font-display);
   font-size: clamp(2.2rem, 5vw, 4rem);
   font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: -.01em;
   line-height: 1;
 }
 
 .section-head .s-rule { flex: 1; height: 1px; background: var(--grey-80); align-self: center; }
 
-/* About */
 .about-grid {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
@@ -508,14 +472,8 @@ body.menu-open .page-w { opacity: .3; }
   align-items: start;
 }
 
-.about-grid p {
-  color: var(--grey-40);
-  font-size: .95rem;
-  line-height: 1.85;
-  margin-bottom: var(--gap);
-}
-
-.about-grid p strong { color: var(--color-text); font-weight: 500; }
+.about-grid p { color: var(--grey-40); font-size: .95rem; line-height: 1.85; margin-bottom: var(--gap); }
+.about-grid p strong { color: var(--text); font-weight: 500; }
 
 .about-meta {
   border: 1px solid var(--grey-80);
@@ -531,17 +489,14 @@ body.menu-open .page-w { opacity: .3; }
   justify-content: space-between;
   gap: var(--gap);
   font-size: .8rem;
-  letter-spacing: .05em;
   border-bottom: 1px solid var(--grey-80);
   padding-bottom: var(--gap);
 }
 
 .about-meta .meta-row:last-child { border-bottom: none; padding-bottom: 0; }
-
-.about-meta .meta-k { color: var(--color-red); text-transform: uppercase; font-size: .68rem; letter-spacing: .15em; }
+.about-meta .meta-k { color: var(--red); text-transform: uppercase; font-size: .68rem; letter-spacing: .15em; }
 .about-meta .meta-v { color: var(--grey-40); text-align: right; }
 
-/* Projects */
 .proj-list { display: flex; flex-direction: column; }
 
 .proj-item {
@@ -555,54 +510,30 @@ body.menu-open .page-w { opacity: .3; }
 
 .proj-item:last-child { border-bottom: none; }
 
-.proj-num {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  color: var(--grey-80);
-  min-width: 2.2rem;
-  transition: color .2s;
-}
-
-.proj-item:hover .proj-num { color: var(--color-red); }
+.proj-num { font-family: var(--font-display); font-size: 1.1rem; color: var(--grey-80); min-width: 2.2rem; transition: color .2s; }
+.proj-item:hover .proj-num { color: var(--red); }
 
 .proj-body h3 {
   font-family: var(--font-display);
   font-size: clamp(1.6rem, 3vw, 2.4rem);
   font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: .01em;
   line-height: 1;
   margin-bottom: .4rem;
   transition: color .2s;
 }
 
-.proj-item:hover .proj-body h3 { color: var(--color-red); }
+.proj-item:hover .proj-body h3 { color: var(--red); }
 
 .proj-body .p-one { color: var(--grey-40); font-size: .88rem; margin-bottom: .5rem; }
-
-.proj-body .p-tech {
-  font-size: .68rem;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--color-red);
-  margin-bottom: .8rem;
-}
-
+.proj-body .p-tech { font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--red); margin-bottom: .8rem; }
 .proj-body ul { list-style: none; display: flex; flex-direction: column; gap: .3rem; }
-
-.proj-body li {
-  font-size: .83rem;
-  color: var(--grey-40);
-  padding-left: 1.1rem;
-  position: relative;
-  line-height: 1.5;
-}
-
+.proj-body li { font-size: .83rem; color: var(--grey-40); padding-left: 1.1rem; position: relative; line-height: 1.5; }
 .proj-body li::before { content: '—'; position: absolute; left: 0; color: var(--grey-80); }
 
 .proj-act { display: flex; gap: .5rem; flex-wrap: wrap; }
 
-.proj-act a {
+.proj-act a, .d-act a {
   font-size: .7rem;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -613,15 +544,10 @@ body.menu-open .page-w { opacity: .3; }
   transition: all .2s;
 }
 
-.proj-act a:hover { border-color: var(--color-red); color: var(--color-red); }
+.proj-act a:hover, .d-act a:not(.is-demo):hover { border-color: var(--red); color: var(--red); }
 
-.proj-act a.is-demo {
-  background: var(--color-red);
-  border-color: var(--color-red);
-  color: #fff;
-}
-
-.proj-act a.is-demo:hover { background: #e0402e; border-color: #e0402e; color: #fff; }
+.is-demo { background: var(--red) !important; border-color: var(--red) !important; color: #fff !important; }
+.is-demo:hover { background: #e0402e !important; border-color: #e0402e !important; }
 
 .demo-label {
   font-size: .7rem;
@@ -634,12 +560,7 @@ body.menu-open .page-w { opacity: .3; }
   gap: .6rem;
 }
 
-.demo-label::before {
-  content: '';
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--color-red);
-}
+.demo-label::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--red); }
 
 .demo-grid {
   display: grid;
@@ -658,42 +579,12 @@ body.menu-open .page-w { opacity: .3; }
 }
 
 .demo-card:hover { border-color: var(--grey-40); }
-
-.demo-card h3 {
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  font-weight: 400;
-  text-transform: uppercase;
-  line-height: 1;
-}
-
+.demo-card h3 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 400; text-transform: uppercase; line-height: 1; }
 .demo-card .d-one { color: var(--grey-40); font-size: .82rem; line-height: 1.55; flex: 1; }
-
-.demo-card .d-tech {
-  font-size: .62rem;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--color-red);
-}
-
+.demo-card .d-tech { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--red); }
 .demo-card .d-act { display: flex; gap: .5rem; margin-top: .4rem; }
+.demo-card .d-act a { padding: .35rem .9rem; font-size: .68rem; }
 
-.demo-card .d-act a {
-  font-size: .68rem;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  border: 1px solid var(--grey-80);
-  border-radius: 999px;
-  padding: .35rem .9rem;
-  color: var(--grey-40);
-  transition: all .2s;
-}
-
-.demo-card .d-act a.is-demo { background: var(--color-red); border-color: var(--color-red); color: #fff; }
-.demo-card .d-act a.is-demo:hover { background: #e0402e; }
-.demo-card .d-act a:not(.is-demo):hover { border-color: var(--color-red); color: var(--color-red); }
-
-/* Skills */
 .skill-rows { border-top: 1px solid var(--grey-80); }
 
 .skill-row {
@@ -705,16 +596,9 @@ body.menu-open .page-w { opacity: .3; }
   align-items: baseline;
 }
 
-.skill-row .sk-k {
-  font-family: var(--font-display);
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  color: var(--color-text);
-}
-
+.skill-row .sk-k { font-family: var(--font-display); font-size: 1.2rem; text-transform: uppercase; }
 .skill-row .sk-v { color: var(--grey-40); font-size: .88rem; }
 
-/* Contact */
 .contact-s { text-align: center; padding-bottom: calc(var(--gap-3) * 2); }
 
 .contact-s h2 {
@@ -726,8 +610,7 @@ body.menu-open .page-w { opacity: .3; }
   margin-bottom: var(--gap);
 }
 
-.contact-s h2 em { font-style: normal; color: var(--color-red); }
-
+.contact-s h2 em { font-style: normal; color: var(--red); }
 .contact-s .c-sub { color: var(--grey-40); font-size: .9rem; margin-bottom: var(--gap-2); }
 
 .contact-mail {
@@ -736,7 +619,6 @@ body.menu-open .page-w { opacity: .3; }
   font-size: clamp(1.4rem, 4vw, 2.6rem);
   text-transform: uppercase;
   letter-spacing: .02em;
-  color: var(--color-text);
   position: relative;
   margin-bottom: var(--gap-2);
   word-break: break-all;
@@ -748,13 +630,13 @@ body.menu-open .page-w { opacity: .3; }
   position: absolute;
   left: 0; bottom: -4px;
   width: 100%; height: 2px;
-  background: var(--color-red);
+  background: var(--red);
   transform: scaleX(0);
   transform-origin: right;
   transition: transform .45s cubic-bezier(.76, 0, .24, 1);
 }
 
-.contact-mail:hover { color: var(--color-red); }
+.contact-mail:hover { color: var(--red); }
 .contact-mail:hover::after { transform: scaleX(1); transform-origin: left; }
 
 .contact-row { display: flex; gap: var(--gap-2); justify-content: center; flex-wrap: wrap; }
@@ -769,9 +651,8 @@ body.menu-open .page-w { opacity: .3; }
   transition: color .2s, border-color .2s;
 }
 
-.contact-row a:hover { color: var(--color-red); border-color: var(--color-red); }
+.contact-row a:hover { color: var(--red); border-color: var(--red); }
 
-/* Footer */
 .site-footer {
   border-top: 1px solid var(--grey-80);
   padding: var(--gap-2) var(--container);
@@ -783,16 +664,116 @@ body.menu-open .page-w { opacity: .3; }
   color: var(--grey-40);
 }
 
-.site-footer .heart { color: var(--color-red); }
-.site-footer a { color: var(--color-red); }
+.site-footer .heart { color: var(--red); }
+.site-footer a { color: var(--red); }
 .site-footer a:hover { text-decoration: underline; }
 
-/* ───────── 9. THEME TOGGLE ───────── */
+/* ───────── ⑥ SUB-PAGES ───────── */
+.sub-hero {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--container);
+}
+
+.sub-hero-bg { position: absolute; inset: 0; }
+
+.sub-hero-content { position: relative; z-index: 2; }
+
+.sub-title {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 9vw, 9rem);
+  text-transform: uppercase;
+  line-height: .9;
+  color: var(--text);
+}
+
+.sub-underline {
+  height: 3px;
+  width: 60px;
+  margin-top: .5rem;
+}
+
+.sub-back {
+  position: absolute;
+  top: 80px;
+  left: var(--container);
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  opacity: .7;
+  transition: opacity .2s;
+  font-family: var(--font-body);
+  font-size: .72rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  z-index: 3;
+}
+
+.sub-back:hover { opacity: 1; }
+.sub-back svg { width: 34px; height: 34px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+.sub-back svg circle:last-child { fill: currentColor; stroke: none; }
+
+.sub-down {
+  position: absolute;
+  bottom: var(--container);
+  right: var(--container);
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--grey-40);
+  background: none;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 1rem;
+  z-index: 3;
+  transition: background .2s, color .2s;
+}
+
+.sub-down:hover { background: var(--text); color: var(--bg); }
+
+.sub-quote { padding: calc(var(--container) * 1.5) var(--container); }
+
+.sub-quote blockquote {
+  font-family: var(--font-body);
+  font-size: clamp(1.8rem, 4vw, 3.5rem);
+  font-weight: 400;
+  line-height: 1.15;
+  margin: 0 0 2rem;
+}
+
+.sub-quote em { font-style: normal; }
+.sub-quote hr { border: none; border-top: 1px solid var(--grey-80); margin: 2rem 0; }
+
+.sub-intro-layout {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: var(--gap-2);
+}
+
+.sub-label {
+  font-size: .75rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--grey-40);
+}
+
+.sub-body { color: var(--grey-40); font-size: .95rem; line-height: 1.8; }
+
+.sub-projects { padding: 0 var(--container) var(--gap-3); }
+
+/* ───────── ⑦ THEME TOGGLE ───────── */
 .theme-toggle {
   position: fixed;
   bottom: var(--gap-2);
   right: var(--gap-2);
-  z-index: 997;
+  z-index: 600;
   background: none;
   border: none;
   cursor: pointer;
@@ -804,8 +785,6 @@ body.menu-open .page-w { opacity: .3; }
   border-radius: 12px;
   border: 1px solid var(--grey-40);
   position: relative;
-  background: transparent;
-  transition: background .3s;
 }
 
 .toggle-thumb {
@@ -813,14 +792,11 @@ body.menu-open .page-w { opacity: .3; }
   top: 3px; left: 3px;
   width: 16px; height: 16px;
   border-radius: 50%;
-  background: var(--color-text);
-  transition: transform .3s cubic-bezier(.68, -0.55, .27, 1.55), background .3s;
+  background: var(--text);
+  transition: transform .3s cubic-bezier(.68, -.55, .27, 1.55), background .3s;
 }
 
-html.is-light .toggle-thumb {
-  transform: translateX(20px);
-  background: #121212;
-}
+html.is-light .toggle-thumb { transform: translateX(20px); background: #121212; }
 
 /* ───────── REVEALS ───────── */
 .js .reveal {
@@ -844,134 +820,116 @@ html.is-light .toggle-thumb {
 
 /* ───────── RESPONSIVE ───────── */
 @media (max-width: 860px) {
-  .nav-clock-w { display: none; }
-  .hero-layout { grid-template-columns: 1fr; padding-top: 80px; align-content: center; gap: var(--gap); }
-  .hero-dial-w { height: 44vh; }
-  .dial-labels { width: min(44vh, 90vw); }
-  .hero-arm-links-w { position: static; transform: none; opacity: 1; margin-top: var(--gap); }
+  .nav-clock { display: none; }
+  .hero { grid-template-columns: 1fr; padding-top: 90px; padding-bottom: 130px; gap: var(--gap); align-content: center; }
+  .wheel-container { max-width: min(70vw, 46vh); }
   .about-grid { grid-template-columns: 1fr; }
   .skill-row { grid-template-columns: 1fr; gap: .3rem; }
   .proj-item { grid-template-columns: auto 1fr; }
   .proj-act { grid-column: 2; }
+  .sub-intro-layout { grid-template-columns: 1fr; }
+  .arm-nav { position: absolute; }
 }
 </style>
 </head>
 <body>
 
 <!-- ① PRELOADER -->
-<div class="preloader-w" aria-hidden="true">
-  <div class="preloader-logo-w">A<sup>®</sup></div>
-  <div class="preloader-line"></div>
-  <div class="preloader-text-w">Aryan Shresthacharya</div>
+<div class="preloader" aria-hidden="true">
+  <div class="preloader-logo">A<span>®</span></div>
+  <svg class="preloader-lines" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+    <path class="line-red"  d="M 0 100 Q 200 50 400 20"  fill="none" stroke="#ff5541" stroke-width="3" stroke-linecap="round"/>
+    <path class="line-grey" d="M 0 20  Q 200 60 400 100" fill="none" stroke="#aaaaaa" stroke-width="2" stroke-linecap="round"/>
+  </svg>
+  <div class="preloader-dot"></div>
+  <div class="preloader-count">0</div>
 </div>
 
-<!-- ② NAVIGATION -->
-<header class="nav-w">
-  <div class="nav-inner">
-    <a class="nav-brand" href="#hero">A<span class="brand-reg">®</span></a>
-
-    <div class="nav-clock-w" aria-hidden="true">
-      <div class="nav-clock-inner">
-        <span class="br-l">(</span>
-        <span class="nav-city">SYD</span>
-        <span class="br-r">)</span>
-        <span class="nav-time">00:00</span>
-      </div>
-    </div>
-
-    <button class="nav-menu-btn" aria-expanded="false" aria-controls="navMenu">MENU</button>
+<!-- ② NAV -->
+<header class="nav">
+  <a class="nav-brand" id="navBrand" href="#top">A<sup>®</sup></a>
+  <div class="nav-clock" aria-hidden="true">
+    <span class="clock-open">(</span>
+    <span class="clock-city">SYD</span>
+    <span class="clock-close">)</span>
+    <span class="clock-time">00:00</span>
   </div>
+  <button class="nav-menu-btn" aria-expanded="false" aria-controls="navMenu">MENU</button>
 </header>
 
 <div class="menu-backdrop" id="menuBackdrop" aria-hidden="true"></div>
 
-<!-- Full-screen menu overlay -->
+<!-- ③ MENU OVERLAY -->
 <div class="nav-menu" id="navMenu" aria-hidden="true">
-  <nav class="nav-links">
-    <a class="nav-link" href="#about">
-      <span class="link-bracket">( <i class="dot"></i> )</span>
-      <span class="link-text">About</span>
-    </a>
-    <a class="nav-link" href="#projects">
-      <span class="link-bracket">( <i class="dot"></i> )</span>
-      <span class="link-text">Projects</span>
-    </a>
-    <a class="nav-link" href="#skills">
-      <span class="link-bracket">( <i class="dot"></i> )</span>
-      <span class="link-text">Skills</span>
-    </a>
-    <a class="nav-link" href="#contact">
-      <span class="link-bracket">( <i class="dot"></i> )</span>
-      <span class="link-text">Contact</span>
-    </a>
+  <nav>
+    <a class="menu-link" href="#about"><span class="ml-bracket">( <i></i> )</span><span class="ml-text">About</span></a>
+    <a class="menu-link" href="#projects"><span class="ml-bracket">( <i></i> )</span><span class="ml-text">Projects</span></a>
+    <a class="menu-link" href="#skills"><span class="ml-bracket">( <i></i> )</span><span class="ml-text">Skills</span></a>
+    <a class="menu-link" href="#studio" data-iris="3"><span class="ml-bracket">( <i></i> )</span><span class="ml-text">A® Studio</span></a>
+    <a class="menu-link is-cta" href="#contact">Contact</a>
   </nav>
-  <footer class="nav-footer">
-    <span>© 2026 Aryan Shresthacharya</span>
-    <a href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a>
-    <a href="https://www.linkedin.com/in/aryan-shresthacharya-405b1b30a/" target="_blank" rel="noopener">LinkedIn</a>
-  </footer>
+  <footer>© 2026 Aryan Shresthacharya · Sydney</footer>
 </div>
 
-<!-- ③ MAIN PAGE WRAPPER -->
-<div class="page-w">
-<main class="main-w">
+<!-- ④ IRIS TRANSITION OVERLAY -->
+<div class="iris-overlay" id="irisOverlay" aria-hidden="true"></div>
 
-  <!-- ④ HERO SECTION -->
-  <section class="hero-s" id="hero">
-    <div class="hero-layout">
+<!-- ⑤ HOMEPAGE -->
+<div class="page" id="page-home">
 
-      <div class="hero-content">
-        <h1 class="hero-headline">The Digital Architect for the Modern Web.</h1>
-        <p class="hero-sub">Full-stack developer · AI/ML engineer · Web studio founder</p>
-        <a class="btn-w is-main" href="#about">
-          <div class="btn-inner">
-            <span class="btn-text">About Me</span>
-            <span class="btn-arrow-circle">
-              <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </span>
-          </div>
-        </a>
-      </div>
+  <section class="hero" id="top">
 
-      <div class="hero-dial-w">
-        <div id="dial-mount"></div>
-        <svg class="dial-labels" viewBox="0 0 700 700" aria-hidden="true">
-          <defs>
-            <path id="top-arc"    d="M 100,350 A 250,250 0 0,1 600,350"/>
-            <path id="right-arc"  d="M 350,100 A 250,250 0 0,1 350,600"/>
-            <path id="bottom-arc" d="M 600,350 A 250,250 0 0,1 100,350"/>
-            <path id="left-arc"   d="M 350,600 A 250,250 0 0,1 350,100"/>
-          </defs>
-          <text class="arc-text"><textPath href="#top-arc" startOffset="50%" text-anchor="middle">WEB ARCHITECTURE</textPath></text>
-          <text class="arc-text"><textPath href="#right-arc" startOffset="50%" text-anchor="middle">UI/UX ENGINEERING</textPath></text>
-          <text class="arc-text"><textPath href="#bottom-arc" startOffset="50%" text-anchor="middle">MACHINE LEARNING</textPath></text>
-          <text class="arc-text"><textPath href="#left-arc" startOffset="50%" text-anchor="middle">A® STUDIO</textPath></text>
-        </svg>
-
-        <div class="hero-arm-links-w">
-          <div class="hero-arm-track">
-            <a class="btn-arm active" href="#projects">Web Architecture</a>
-            <a class="btn-arm" href="#skills">UI/UX Engineering</a>
-            <a class="btn-arm" href="#projects">Machine Learning</a>
-            <a class="btn-arm" href="#about">A® Studio</a>
-          </div>
-          <div class="hero-arm-nav">
-            <button class="arm-prev" aria-label="Previous project">&lt;</button>
-            <button class="arm-next" aria-label="Next project">&gt;</button>
-          </div>
-        </div>
-      </div>
-
+    <div class="hero-content">
+      <h1 class="hero-headline">
+        <span class="hw">The</span>
+        <span class="hw">Digital</span>
+        <span class="hw">Architect</span>
+        <span class="hw">for the</span>
+        <span class="hw">Modern Web.</span>
+      </h1>
+      <a class="cta-btn" href="#about">
+        About Me
+        <span class="cta-circle">
+          <svg viewBox="0 0 16 16"><path d="M3 8h10M8 3l5 5-5 5"/></svg>
+        </span>
+      </a>
     </div>
+
+    <!-- THE INTERACTIVE WHEEL -->
+    <div class="wheel-container">
+      <canvas class="wheel-canvas" id="wheelCanvas"></canvas>
+
+      <svg class="wheel-labels" id="wheelLabels" viewBox="0 0 600 600" aria-hidden="true">
+        <defs>
+          <path id="arc-top"    d="M 80,300 A 220,220 0 0,1 520,300"/>
+          <path id="arc-right"  d="M 300,80  A 220,220 0 0,1 300,520"/>
+          <path id="arc-bottom" d="M 520,300 A 220,220 0 0,1 80,300"/>
+          <path id="arc-left"   d="M 300,520 A 220,220 0 0,1 300,80"/>
+        </defs>
+        <text class="wl"><textPath href="#arc-top"    startOffset="50%" text-anchor="middle">WEB ARCHITECTURE</textPath></text>
+        <text class="wl"><textPath href="#arc-right"  startOffset="50%" text-anchor="middle">UI/UX ENGINEERING</textPath></text>
+        <text class="wl"><textPath href="#arc-bottom" startOffset="50%" text-anchor="middle">MACHINE LEARNING</textPath></text>
+        <text class="wl"><textPath href="#arc-left"   startOffset="50%" text-anchor="middle">A® STUDIO</textPath></text>
+      </svg>
+    </div>
+
+    <!-- Arm navigation -->
+    <div class="arm-nav">
+      <button class="arm-btn active" data-section="0">Web Architecture</button>
+      <button class="arm-btn" data-section="1">UI/UX Engineering</button>
+      <button class="arm-btn" data-section="2">Machine Learning</button>
+      <button class="arm-btn" data-section="3">A® Studio</button>
+      <div class="arm-arrows">
+        <button class="arm-prev" aria-label="Previous section">←</button>
+        <button class="arm-next" aria-label="Next section">→</button>
+      </div>
+    </div>
+
   </section>
 
-  <!-- ⑤ ABOUT -->
+  <!-- ABOUT -->
   <section class="section" id="about">
-    <div class="section-head">
-      <span class="s-num">01</span>
-      <h2>About</h2>
-      <div class="s-rule"></div>
-    </div>
+    <div class="section-head"><span class="s-num">01</span><h2>About</h2><div class="s-rule"></div></div>
     <div class="about-grid">
       <div class="reveal">
         <p>I'm a developer who learns by <strong>shipping real things</strong>. My projects range from a medication tracker for elderly users to a real-time sign language recognition system hitting <strong>97% accuracy</strong> with under 50ms latency.</p>
@@ -988,16 +946,11 @@ html.is-light .toggle-thumb {
     </div>
   </section>
 
-  <!-- ⑤ PROJECTS -->
+  <!-- PROJECTS -->
   <section class="section" id="projects">
-    <div class="section-head">
-      <span class="s-num">02</span>
-      <h2>Projects</h2>
-      <div class="s-rule"></div>
-    </div>
+    <div class="section-head"><span class="s-num">02</span><h2>Projects</h2><div class="s-rule"></div></div>
 
     <div class="proj-list">
-
       <article class="proj-item reveal">
         <span class="proj-num">01</span>
         <div class="proj-body">
@@ -1010,9 +963,7 @@ html.is-light .toggle-thumb {
             <li>Built-in training workflow and text-to-speech output</li>
           </ul>
         </div>
-        <div class="proj-act">
-          <a href="https://github.com/Aryan39-ai/SLRS" target="_blank" rel="noopener">GitHub</a>
-        </div>
+        <div class="proj-act"><a href="https://github.com/Aryan39-ai/SLRS" target="_blank" rel="noopener">GitHub</a></div>
       </article>
 
       <article class="proj-item reveal">
@@ -1027,9 +978,7 @@ html.is-light .toggle-thumb {
             <li>Accessibility-first: large tap targets, high contrast mode</li>
           </ul>
         </div>
-        <div class="proj-act">
-          <a href="https://github.com/Aryan39-ai/MediRemind" target="_blank" rel="noopener">GitHub</a>
-        </div>
+        <div class="proj-act"><a href="https://github.com/Aryan39-ai/MediRemind" target="_blank" rel="noopener">GitHub</a></div>
       </article>
 
       <article class="proj-item reveal">
@@ -1044,66 +993,42 @@ html.is-light .toggle-thumb {
             <li>xUnit test suite for JSON parsing and formatting</li>
           </ul>
         </div>
-        <div class="proj-act">
-          <a href="https://github.com/Aryan39-ai/WeatherApp" target="_blank" rel="noopener">GitHub</a>
-        </div>
+        <div class="proj-act"><a href="https://github.com/Aryan39-ai/WeatherApp" target="_blank" rel="noopener">GitHub</a></div>
       </article>
-
     </div>
 
     <p class="demo-label">Live demos</p>
     <div class="demo-grid">
-
       <article class="demo-card reveal">
         <h3>Currency Converter</h3>
         <p class="d-one">Live conversion across 15 currencies with a 30-day trend chart.</p>
         <p class="d-tech">JavaScript · Chart.js · Frankfurter API</p>
-        <div class="d-act">
-          <a class="is-demo" href="./currency-converter/">Live demo</a>
-          <a href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a>
-        </div>
+        <div class="d-act"><a class="is-demo" href="./currency-converter/">Live demo</a><a href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a></div>
       </article>
-
       <article class="demo-card reveal" style="--d:.08s">
         <h3>Expense Tracker</h3>
         <p class="d-one">Personal expense tracking with live charts and CSV export.</p>
         <p class="d-tech">JavaScript · Chart.js · localStorage</p>
-        <div class="d-act">
-          <a class="is-demo" href="./expense-tracker/">Live demo</a>
-          <a href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a>
-        </div>
+        <div class="d-act"><a class="is-demo" href="./expense-tracker/">Live demo</a><a href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a></div>
       </article>
-
       <article class="demo-card reveal" style="--d:.16s">
         <h3>GitHub Lookup</h3>
         <p class="d-one">Search any GitHub user — profile, top repos, language stats.</p>
         <p class="d-tech">JavaScript · GitHub REST API</p>
-        <div class="d-act">
-          <a class="is-demo" href="./github-lookup/">Live demo</a>
-          <a href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a>
-        </div>
+        <div class="d-act"><a class="is-demo" href="./github-lookup/">Live demo</a><a href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a></div>
       </article>
-
       <article class="demo-card reveal" style="--d:.24s">
         <h3>Pomodoro Timer</h3>
         <p class="d-one">Focused work timer with custom durations and session tracking.</p>
         <p class="d-tech">JavaScript · Web Audio · localStorage · SVG</p>
-        <div class="d-act">
-          <a class="is-demo" href="./pomodoro/">Live demo</a>
-          <a href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a>
-        </div>
+        <div class="d-act"><a class="is-demo" href="./pomodoro/">Live demo</a><a href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a></div>
       </article>
-
     </div>
   </section>
 
-  <!-- ⑤ SKILLS -->
+  <!-- SKILLS -->
   <section class="section" id="skills">
-    <div class="section-head">
-      <span class="s-num">03</span>
-      <h2>Skills</h2>
-      <div class="s-rule"></div>
-    </div>
+    <div class="section-head"><span class="s-num">03</span><h2>Skills</h2><div class="s-rule"></div></div>
     <div class="skill-rows">
       <div class="skill-row reveal"><span class="sk-k">Languages</span><span class="sk-v">Python · C# · JavaScript · TypeScript · Kotlin · SQL</span></div>
       <div class="skill-row reveal" style="--d:.07s"><span class="sk-k">Web &amp; Mobile</span><span class="sk-v">ASP.NET Core · .NET MAUI · React · Jetpack Compose · Tailwind CSS · PWA</span></div>
@@ -1112,7 +1037,7 @@ html.is-light .toggle-thumb {
     </div>
   </section>
 
-  <!-- ⑤ CONTACT -->
+  <!-- CONTACT -->
   <section class="section contact-s" id="contact">
     <div class="reveal">
       <h2>Let's build <em>together.</em></h2>
@@ -1130,444 +1055,756 @@ html.is-light .toggle-thumb {
     <span><a href="https://github.com/Aryan39-ai/Aryan39-ai.github.io" target="_blank" rel="noopener">View source</a></span>
   </footer>
 
-</main>
 </div>
 
-<!-- ⑥ DARK/LIGHT TOGGLE -->
+<!-- ⑥ SUB-PAGES -->
+
+<div class="page sub-page" id="page-web" hidden>
+  <section class="sub-hero">
+    <div class="sub-hero-bg" style="background: radial-gradient(circle at 70% 30%, rgba(85,149,255,.22), transparent 60%), var(--bg);"></div>
+    <button class="sub-back"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16"/><circle cx="20" cy="20" r="4"/></svg> Back</button>
+    <div class="sub-hero-content">
+      <h2 class="sub-title">WEB<br>ARCHITECTURE</h2>
+      <div class="sub-underline" style="background: var(--accent-web)"></div>
+    </div>
+    <button class="sub-down" aria-label="Scroll down">↓</button>
+  </section>
+  <section class="sub-quote">
+    <blockquote>Building web systems that are as fast as they are <em style="color: var(--accent-web)">beautiful.</em></blockquote>
+    <hr>
+    <div class="sub-intro-layout">
+      <p class="sub-label">ASP.NET · React · JavaScript</p>
+      <p class="sub-body">Full-stack web architecture with a focus on performance, accessibility, and clean code — from server-rendered .NET apps to lightweight vanilla JS tools.</p>
+    </div>
+  </section>
+  <section class="sub-projects">
+    <div class="proj-list">
+      <article class="proj-item">
+        <span class="proj-num">01</span>
+        <div class="proj-body">
+          <h3>MediRemind</h3>
+          <p class="p-one">Medication adherence tracking for elderly users and their caregivers.</p>
+          <p class="p-tech">ASP.NET Core 8 · EF Core · SQLite · Tailwind · BCrypt · PWA</p>
+        </div>
+        <div class="proj-act"><a href="https://github.com/Aryan39-ai/MediRemind" target="_blank" rel="noopener">GitHub</a></div>
+      </article>
+      <article class="proj-item">
+        <span class="proj-num">02</span>
+        <div class="proj-body">
+          <h3>Currency Converter</h3>
+          <p class="p-one">Live conversion across 15 currencies with a 30-day trend chart.</p>
+          <p class="p-tech">JavaScript · Chart.js · Frankfurter API</p>
+        </div>
+        <div class="proj-act"><a class="is-demo" href="./currency-converter/">Live demo</a></div>
+      </article>
+      <article class="proj-item">
+        <span class="proj-num">03</span>
+        <div class="proj-body">
+          <h3>GitHub Lookup</h3>
+          <p class="p-one">Search any GitHub user — profile, top repos, language stats.</p>
+          <p class="p-tech">JavaScript · GitHub REST API</p>
+        </div>
+        <div class="proj-act"><a class="is-demo" href="./github-lookup/">Live demo</a></div>
+      </article>
+    </div>
+  </section>
+</div>
+
+<div class="page sub-page" id="page-uiux" hidden>
+  <section class="sub-hero">
+    <div class="sub-hero-bg" style="background: radial-gradient(circle at 70% 30%, rgba(255,221,75,.18), transparent 60%), var(--bg);"></div>
+    <button class="sub-back"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16"/><circle cx="20" cy="20" r="4"/></svg> Back</button>
+    <div class="sub-hero-content">
+      <h2 class="sub-title">UI/UX<br>ENGINEERING</h2>
+      <div class="sub-underline" style="background: var(--accent-uiux)"></div>
+    </div>
+    <button class="sub-down" aria-label="Scroll down">↓</button>
+  </section>
+  <section class="sub-quote">
+    <blockquote>Interfaces that feel <em style="color: var(--accent-uiux)">obvious</em> the first time you use them.</blockquote>
+    <hr>
+    <div class="sub-intro-layout">
+      <p class="sub-label">Design systems · Tailwind · Animation</p>
+      <p class="sub-body">Accessibility-first interface engineering — large tap targets, high contrast modes, reduced-motion support, and micro-interactions that serve the user instead of distracting them.</p>
+    </div>
+  </section>
+  <section class="sub-projects">
+    <div class="proj-list">
+      <article class="proj-item">
+        <span class="proj-num">01</span>
+        <div class="proj-body">
+          <h3>This Portfolio</h3>
+          <p class="p-one">Interactive wheel navigation, iris transitions, canvas rendering — all vanilla.</p>
+          <p class="p-tech">HTML · CSS · Canvas 2D · GSAP</p>
+        </div>
+        <div class="proj-act"><a href="https://github.com/Aryan39-ai/Aryan39-ai.github.io" target="_blank" rel="noopener">GitHub</a></div>
+      </article>
+      <article class="proj-item">
+        <span class="proj-num">02</span>
+        <div class="proj-body">
+          <h3>Pomodoro Timer</h3>
+          <p class="p-one">Animated SVG progress ring with session tracking.</p>
+          <p class="p-tech">JavaScript · Web Audio · SVG</p>
+        </div>
+        <div class="proj-act"><a class="is-demo" href="./pomodoro/">Live demo</a></div>
+      </article>
+      <article class="proj-item">
+        <span class="proj-num">03</span>
+        <div class="proj-body">
+          <h3>Expense Tracker</h3>
+          <p class="p-one">Personal expense tracking with live doughnut charts and CSV export.</p>
+          <p class="p-tech">JavaScript · Chart.js · localStorage</p>
+        </div>
+        <div class="proj-act"><a class="is-demo" href="./expense-tracker/">Live demo</a></div>
+      </article>
+    </div>
+  </section>
+</div>
+
+<div class="page sub-page" id="page-ml" hidden>
+  <section class="sub-hero">
+    <div class="sub-hero-bg" style="background: radial-gradient(circle at 70% 30%, rgba(255,85,65,.2), transparent 60%), var(--bg);"></div>
+    <button class="sub-back"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16"/><circle cx="20" cy="20" r="4"/></svg> Back</button>
+    <div class="sub-hero-content">
+      <h2 class="sub-title">MACHINE<br>LEARNING</h2>
+      <div class="sub-underline" style="background: var(--accent-ml)"></div>
+    </div>
+    <button class="sub-down" aria-label="Scroll down">↓</button>
+  </section>
+  <section class="sub-quote">
+    <blockquote>Models that work in the real world, <em style="color: var(--accent-ml)">in real time.</em></blockquote>
+    <hr>
+    <div class="sub-intro-layout">
+      <p class="sub-label">scikit-learn · MediaPipe · OpenCV · TensorFlow</p>
+      <p class="sub-body">Applied machine learning with a focus on latency and accessibility — computer vision pipelines that run offline on consumer hardware, not just in notebooks.</p>
+    </div>
+  </section>
+  <section class="sub-projects">
+    <div class="proj-list">
+      <article class="proj-item">
+        <span class="proj-num">01</span>
+        <div class="proj-body">
+          <h3>SignBridge</h3>
+          <p class="p-one">Real-time sign language recognition on the desktop.</p>
+          <p class="p-tech">Python · PyQt6 · MediaPipe · scikit-learn · OpenCV</p>
+          <ul>
+            <li>97% accuracy on static signs, 89% on dynamic gestures</li>
+            <li>Under 50ms latency, runs fully offline</li>
+            <li>Built-in training workflow and text-to-speech output</li>
+          </ul>
+        </div>
+        <div class="proj-act"><a href="https://github.com/Aryan39-ai/SLRS" target="_blank" rel="noopener">GitHub</a></div>
+      </article>
+    </div>
+  </section>
+</div>
+
+<div class="page sub-page" id="page-studio" hidden>
+  <section class="sub-hero">
+    <div class="sub-hero-bg" style="background: radial-gradient(circle at 70% 30%, rgba(81,183,90,.2), transparent 60%), var(--bg);"></div>
+    <button class="sub-back"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16"/><circle cx="20" cy="20" r="4"/></svg> Back</button>
+    <div class="sub-hero-content">
+      <h2 class="sub-title">A®<br>STUDIO</h2>
+      <div class="sub-underline" style="background: var(--accent-studio)"></div>
+    </div>
+    <button class="sub-down" aria-label="Scroll down">↓</button>
+  </section>
+  <section class="sub-quote">
+    <blockquote>A small web studio with <em style="color: var(--accent-studio)">big standards.</em></blockquote>
+    <hr>
+    <div class="sub-intro-layout">
+      <p class="sub-label">Client work · Web management</p>
+      <p class="sub-body">A® is my web management studio — building and maintaining sites for clients with the same care as my own projects. Fast, accessible, and built to last. Currently taking on freelance web work in Sydney or remote.</p>
+    </div>
+  </section>
+  <section class="sub-projects" style="text-align:center; padding-bottom: calc(var(--gap-3) * 2);">
+    <a class="contact-mail" href="mailto:rnacharya39@gmail.com">rnacharya39@gmail.com</a>
+  </section>
+</div>
+
+<!-- ⑦ THEME TOGGLE -->
 <button class="theme-toggle" aria-label="Toggle theme">
-  <div class="toggle-track">
-    <div class="toggle-thumb"></div>
-  </div>
+  <div class="toggle-track"><div class="toggle-thumb"></div></div>
 </button>
 
-<!-- Scripts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 <script>
 (function () {
   'use strict';
 
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var hasGSAP = typeof gsap !== 'undefined';
-  var hasST = hasGSAP && typeof ScrollTrigger !== 'undefined';
-  var hasThree = typeof THREE !== 'undefined';
-  if (hasST) gsap.registerPlugin(ScrollTrigger);
-
-  /* ── 9. THEME TOGGLE ── */
   var htmlEl = document.documentElement;
+
+  /* ───── SEGMENTS ───── */
+  var SEGMENTS = [
+    { id: 'web',    label: 'Web Architecture',  color: '#5595ff', title: 'MediRemind',  sub: 'ASP.NET · React' },
+    { id: 'uiux',   label: 'UI/UX Engineering', color: '#ffdd4b', title: 'Portfolio',   sub: 'Design Systems' },
+    { id: 'ml',     label: 'Machine Learning',  color: '#ff5541', title: 'SignBridge',  sub: '97% Accuracy' },
+    { id: 'studio', label: 'A® Studio',    color: '#51b75a', title: 'A® Studio', sub: 'Client Work' }
+  ];
+
+  var activeSegment = 0;
+  var hoveredSegment = -1;
+  var transitioning = false;
+
+  /* ───── ⑦ THEME TOGGLE ───── */
   var toggleBtn = document.querySelector('.theme-toggle');
   toggleBtn.addEventListener('click', function () {
     htmlEl.classList.toggle('is-light');
     try {
       localStorage.setItem('theme', htmlEl.classList.contains('is-light') ? 'light' : 'dark');
     } catch (e) {}
-    window.dispatchEvent(new CustomEvent('themechange', {
-      detail: { light: htmlEl.classList.contains('is-light') }
-    }));
+    buildTiles();
+    drawWheel();
   });
 
-  /* ── 5b. LIVE CLOCK (cycles SYD → KTM → TKY every 4s) ── */
+  /* ───── ⑩ LIVE CLOCK ───── */
   var cities = [
     { name: 'SYD', tz: 'Australia/Sydney' },
     { name: 'KTM', tz: 'Asia/Kathmandu' },
     { name: 'TKY', tz: 'Asia/Tokyo' }
   ];
-  var cityIndex = 0;
-  var cityEl = document.querySelector('.nav-city');
-  var timeEl = document.querySelector('.nav-time');
+  var cityIdx = 0;
+  var cityEl = document.querySelector('.clock-city');
+  var timeEl = document.querySelector('.clock-time');
 
-  function timeStr(tz) {
+  function tickClock() {
     try {
-      return new Date().toLocaleTimeString('en-US', {
-        timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: false
+      timeEl.textContent = new Date().toLocaleTimeString('en-GB', {
+        timeZone: cities[cityIdx].tz, hour: '2-digit', minute: '2-digit', hour12: false
       });
-    } catch (e) { return '--:--'; }
+    } catch (e) { timeEl.textContent = '--:--'; }
   }
 
-  function renderClock() {
-    cityEl.textContent = cities[cityIndex].name;
-    timeEl.textContent = timeStr(cities[cityIndex].tz);
-  }
-
-  renderClock();
-  setInterval(function () { timeEl.textContent = timeStr(cities[cityIndex].tz); }, 1000);
-  setInterval(function () {
-    cityIndex = (cityIndex + 1) % cities.length;
+  function cycleCity() {
+    cityIdx = (cityIdx + 1) % cities.length;
     if (hasGSAP && !reduceMotion) {
       gsap.to([cityEl, timeEl], {
-        opacity: 0, y: -8, duration: 0.2,
+        y: -8, opacity: 0, duration: 0.2,
         onComplete: function () {
-          renderClock();
-          gsap.to([cityEl, timeEl], { opacity: 1, y: 0, duration: 0.3 });
+          cityEl.textContent = cities[cityIdx].name;
+          tickClock();
+          gsap.to([cityEl, timeEl], { y: 0, opacity: 1, duration: 0.3 });
         }
       });
     } else {
-      renderClock();
+      cityEl.textContent = cities[cityIdx].name;
+      tickClock();
     }
-  }, 4000);
+  }
 
-  /* ── 5c. MENU OVERLAY ── */
+  tickClock();
+  setInterval(tickClock, 1000);
+  setInterval(cycleCity, 4000);
+
+  /* ───── ⑨ MENU ───── */
   var menuBtn = document.querySelector('.nav-menu-btn');
-  var menu = document.getElementById('navMenu');
+  var navMenu = document.getElementById('navMenu');
   var backdrop = document.getElementById('menuBackdrop');
-  var isOpen = false;
+  var menuOpen = false;
 
   function setMenu(open) {
-    isOpen = open;
+    menuOpen = open;
     menuBtn.textContent = open ? 'CLOSE' : 'MENU';
     menuBtn.setAttribute('aria-expanded', String(open));
-    menu.setAttribute('aria-hidden', String(!open));
+    navMenu.setAttribute('aria-hidden', String(!open));
     document.body.classList.toggle('menu-open', open);
     if (open && hasGSAP && !reduceMotion) {
-      gsap.from('.nav-link', {
-        x: 40, opacity: 0, stagger: 0.06, duration: 0.4, ease: 'power2.out', delay: 0.2
+      gsap.from('.menu-link', {
+        x: 50, opacity: 0, stagger: 0.07, delay: 0.2, duration: 0.4, ease: 'power2.out'
       });
     }
   }
 
-  menuBtn.addEventListener('click', function () { setMenu(!isOpen); });
+  menuBtn.addEventListener('click', function () { setMenu(!menuOpen); });
   backdrop.addEventListener('click', function () { setMenu(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
-  document.querySelectorAll('.nav-link').forEach(function (a) {
-    a.addEventListener('click', function () { setMenu(false); });
+
+  document.querySelectorAll('.menu-link').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      setMenu(false);
+      var iris = link.getAttribute('data-iris');
+      if (iris !== null) {
+        e.preventDefault();
+        triggerIrisTransition(parseInt(iris, 10));
+        return;
+      }
+      /* Homepage anchor: if a sub-page is open, restore home instantly first */
+      if (isSubPageOpen()) {
+        e.preventDefault();
+        showHomeInstant();
+        var target = document.querySelector(link.getAttribute('href'));
+        if (target) setTimeout(function () { target.scrollIntoView(); }, 50);
+      }
+    });
   });
 
-  /* ── Headline word split (before reveal) ── */
-  var hl = document.querySelector('.hero-headline');
-  if (hl) {
-    var words = hl.textContent.trim().split(/\s+/);
-    hl.innerHTML = words.map(function (w) {
-      return '<span class="word"><span class="word-inner">' + w + '</span></span>';
-    }).join(' ');
+  /* ───── PAGE STATE HELPERS ───── */
+  var homePage = document.getElementById('page-home');
+  var subPages = Array.prototype.slice.call(document.querySelectorAll('.sub-page'));
+  var irisOverlay = document.getElementById('irisOverlay');
+
+  function isSubPageOpen() {
+    return subPages.some(function (p) { return !p.hidden; });
   }
 
-  /* ── 6. THREE.JS 3D DIAL ── */
-  var dial = null;
-
-  function makeProjectTexture(title, subtitle) {
-    var light = htmlEl.classList.contains('is-light');
-    var c = document.createElement('canvas');
-    c.width = 512; c.height = 512;
-    var ctx = c.getContext('2d');
-    ctx.fillStyle = light ? '#e6e6e2' : '#1a1a1a';
-    ctx.fillRect(0, 0, 512, 512);
-    ctx.strokeStyle = '#ff5541';
-    ctx.lineWidth = 5;
-    ctx.beginPath();
-    ctx.arc(256, 256, 205, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = light ? '#121212' : '#ffffff';
-    ctx.font = '64px "Bebas Neue", "Arial Narrow", Arial';
-    ctx.fillText(title.toUpperCase(), 256, 235);
-    ctx.fillStyle = '#888888';
-    ctx.font = '26px "Host Grotesk", Arial';
-    ctx.fillText(subtitle, 256, 300);
-    return new THREE.CanvasTexture(c);
+  function showHomeInstant() {
+    subPages.forEach(function (p) { p.hidden = true; });
+    homePage.hidden = false;
+    homePage.style.opacity = '1';
+    window.scrollTo(0, 0);
   }
 
-  function initDial() {
-    var mount = document.getElementById('dial-mount');
-    if (!mount) return null;
-    var W = mount.clientWidth, H = mount.clientHeight;
-    if (!W || !H) return null;
+  /* ───── ⑤ THE WHEEL (Canvas 2D) ───── */
+  var canvas = document.getElementById('wheelCanvas');
+  var ctx = canvas.getContext('2d');
+  var wheelLabels = document.getElementById('wheelLabels');
+  var cssSize = 0;
 
-    var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(W, H);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x000000, 0);
-    mount.appendChild(renderer.domElement);
-
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 100);
-    camera.position.z = 5;
-
-    var light = htmlEl.classList.contains('is-light');
-
-    /* RING 1: outer bezel */
-    var metalMat = new THREE.MeshStandardMaterial({
-      color: light ? 0xd0d0d0 : 0x1a1a1a, metalness: 0.9, roughness: 0.3
+  /* Center tiles drawn as offscreen canvases (no image files needed) */
+  var tiles = [];
+  function buildTiles() {
+    var isLight = htmlEl.classList.contains('is-light');
+    tiles = SEGMENTS.map(function (s) {
+      var c = document.createElement('canvas');
+      c.width = 512; c.height = 512;
+      var tctx = c.getContext('2d');
+      tctx.fillStyle = isLight ? '#e6e6e2' : '#1a1a1a';
+      tctx.fillRect(0, 0, 512, 512);
+      tctx.strokeStyle = s.color;
+      tctx.lineWidth = 10;
+      tctx.beginPath();
+      tctx.arc(256, 256, 226, 0, Math.PI * 2);
+      tctx.stroke();
+      tctx.textAlign = 'center';
+      tctx.textBaseline = 'middle';
+      tctx.fillStyle = isLight ? '#121212' : '#ffffff';
+      tctx.font = '72px "Bebas Neue", "Arial Narrow", Arial';
+      tctx.fillText(s.title.toUpperCase(), 256, 230);
+      tctx.fillStyle = '#888888';
+      tctx.font = '30px "Host Grotesk", Arial';
+      tctx.fillText(s.sub, 256, 300);
+      return c;
     });
-    var outerRing = new THREE.Mesh(new THREE.TorusGeometry(2.0, 0.18, 32, 128), metalMat);
-    scene.add(outerRing);
+  }
+  buildTiles();
 
-    /* RING 2: middle track */
-    var midMat = new THREE.MeshStandardMaterial({
-      color: light ? 0xb8b8b8 : 0x2a2a2a, metalness: 0.8, roughness: 0.35
-    });
-    var midRing = new THREE.Mesh(new THREE.TorusGeometry(1.65, 0.08, 32, 128), midMat);
-    scene.add(midRing);
+  function resizeCanvas() {
+    var rect = canvas.parentElement.getBoundingClientRect();
+    cssSize = Math.min(rect.width, rect.height);
+    if (!cssSize) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = cssSize * dpr;
+    canvas.height = cssSize * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    drawWheel();
+  }
+  window.addEventListener('resize', resizeCanvas);
 
-    /* RING 3: inner ring */
-    var innerMat = new THREE.MeshStandardMaterial({
-      color: light ? 0xaaaaaa : 0x222222, metalness: 0.85, roughness: 0.25
-    });
-    var innerRing = new THREE.Mesh(new THREE.TorusGeometry(1.3, 0.06, 32, 128), innerMat);
-    scene.add(innerRing);
+  function drawWheel() {
+    if (!cssSize) return;
+    var size = cssSize;
+    var cx = size / 2, cy = size / 2;
 
-    /* CENTER DISC with project textures */
-    var projects = [
-      ['SignBridge', 'Machine Learning'],
-      ['MediRemind', 'ASP.NET Core'],
-      ['WeatherApp', '.NET MAUI'],
-      ['A® Studio', 'Web Projects']
+    ctx.clearRect(0, 0, size, size);
+
+    var isLight = htmlEl.classList.contains('is-light');
+    var ringBorderColor = isLight ? '#aaaaaa' : '#333333';
+
+    /* RING LAYERS */
+    var rings = [
+      { r: size * 0.47, width: size * 0.07 },
+      { r: size * 0.40, width: size * 0.04 },
+      { r: size * 0.36, width: size * 0.03 }
     ];
-    var textures = projects.map(function (p) { return makeProjectTexture(p[0], p[1]); });
-    var discMat = new THREE.MeshBasicMaterial({ map: textures[0] });
-    var disc = new THREE.Mesh(new THREE.CircleGeometry(1.1, 64), discMat);
-    disc.position.z = 0.01;
-    scene.add(disc);
+    rings.forEach(function (ring) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, ring.r, 0, Math.PI * 2);
+      ctx.strokeStyle = ringBorderColor;
+      ctx.lineWidth = ring.width;
+      ctx.stroke();
+    });
 
-    /* CROSSHAIR lines */
-    var lineMat = new THREE.LineBasicMaterial({ color: light ? 0x999999 : 0x444444 });
-    var hLine = new THREE.Line(
-      new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(-2.5, 0, 0), new THREE.Vector3(2.5, 0, 0)
-      ]), lineMat
-    );
-    var vLine = new THREE.Line(
-      new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(0, -2.5, 0), new THREE.Vector3(0, 2.5, 0)
-      ]), lineMat
-    );
-    scene.add(hLine);
-    scene.add(vLine);
-
-    /* CORNER BRACKETS at 45/135/225/315 */
-    var bMat = new THREE.LineBasicMaterial({ color: light ? 0x888888 : 0x666666 });
-    function createBracket(angle) {
-      var group = new THREE.Group();
-      var h = new THREE.Line(
-        new THREE.BufferGeometry().setFromPoints([
-          new THREE.Vector3(-0.15, 0, 0), new THREE.Vector3(0.15, 0, 0)
-        ]), bMat
-      );
-      var v = new THREE.Line(
-        new THREE.BufferGeometry().setFromPoints([
-          new THREE.Vector3(0, -0.15, 0), new THREE.Vector3(0, 0.15, 0)
-        ]), bMat
-      );
-      group.add(h);
-      group.add(v);
-      var r = 2.15;
-      group.position.set(Math.cos(angle) * r, Math.sin(angle) * r, 0);
-      return group;
+    /* SEGMENT DIVIDERS at 45/135/225/315 (segment boundaries) */
+    ctx.strokeStyle = isLight ? '#aaaaaa' : '#2a2a2a';
+    ctx.lineWidth = 1;
+    for (var i = 0; i < 4; i++) {
+      var divAngle = (i / 4) * Math.PI * 2 - Math.PI / 4;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(divAngle) * size * 0.30, cy + Math.sin(divAngle) * size * 0.30);
+      ctx.lineTo(cx + Math.cos(divAngle) * size * 0.47, cy + Math.sin(divAngle) * size * 0.47);
+      ctx.stroke();
     }
+
+    /* CROSSHAIR */
+    ctx.strokeStyle = isLight ? '#cccccc' : '#333333';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(size, cy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, size); ctx.stroke();
+
+    /* CORNER BRACKETS */
+    var bracketR = size * 0.50;
     [45, 135, 225, 315].forEach(function (deg) {
-      scene.add(createBracket(deg * Math.PI / 180));
+      var a = deg * Math.PI / 180;
+      var bx = cx + Math.cos(a) * bracketR;
+      var by = cy + Math.sin(a) * bracketR;
+      var bs = size * 0.03;
+      ctx.strokeStyle = isLight ? '#999999' : '#555555';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(bx - bs, by); ctx.lineTo(bx + bs, by);
+      ctx.moveTo(bx, by - bs); ctx.lineTo(bx, by + bs);
+      ctx.stroke();
     });
 
-    /* LIGHTING */
-    scene.add(new THREE.AmbientLight(0xffffff, 0.4));
-    var keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
-    keyLight.position.set(2, 3, 4);
-    scene.add(keyLight);
-    var rimLight = new THREE.DirectionalLight(0xffffff, 0.3);
-    rimLight.position.set(-3, -1, 2);
-    scene.add(rimLight);
-
-    /* ANIMATION LOOP: slow rotation + wobble */
-    var currentImage = 0;
-    function animate() {
-      requestAnimationFrame(animate);
-      outerRing.rotation.z -= 0.0015;
-      midRing.rotation.z += 0.001;
-      outerRing.rotation.x = Math.sin(Date.now() * 0.0003) * 0.04;
-      renderer.render(scene, camera);
-    }
-    animate();
-
-    /* IMAGE CYCLING: shrink, swap, grow */
-    function setImage(idx) {
-      idx = ((idx % textures.length) + textures.length) % textures.length;
-      if (idx === currentImage) return;
-      if (hasGSAP && !reduceMotion) {
-        gsap.to(disc.scale, {
-          x: 0.7, y: 0.7, duration: 0.25, ease: 'power2.in',
-          onComplete: function () {
-            discMat.map = textures[idx];
-            discMat.needsUpdate = true;
-            currentImage = idx;
-            gsap.to(disc.scale, { x: 1, y: 1, duration: 0.35, ease: 'back.out(1.5)' });
-          }
-        });
-      } else {
-        discMat.map = textures[idx];
-        discMat.needsUpdate = true;
-        currentImage = idx;
-      }
-    }
-
-    /* MOUSE PARALLAX (camera, fine pointer only) */
-    if (hasGSAP && !reduceMotion &&
-        window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-      document.addEventListener('mousemove', function (e) {
-        var x = (e.clientX / window.innerWidth - 0.5) * 2;
-        var y = (e.clientY / window.innerHeight - 0.5) * 2;
-        gsap.to(camera.position, {
-          x: x * 0.3, y: -y * 0.2, duration: 2, ease: 'power1.out',
-          onUpdate: function () { camera.lookAt(0, 0, 0); }
-        });
-      }, { passive: true });
-    }
-
-    /* RESPONSIVE RESIZE */
-    window.addEventListener('resize', function () {
-      var w = mount.clientWidth, h = mount.clientHeight;
-      if (!w || !h) return;
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-      renderer.setSize(w, h);
+    /* ARROWS on middle ring */
+    [0, 90, 180, 270].forEach(function (deg, idx) {
+      var isNext = idx % 2 === 0;
+      var a = deg * Math.PI / 180;
+      var ax = cx + Math.cos(a) * size * 0.38;
+      var ay = cy + Math.sin(a) * size * 0.38;
+      var as = size * 0.025;
+      ctx.save();
+      ctx.translate(ax, ay);
+      ctx.rotate(a + (isNext ? 0 : Math.PI));
+      ctx.strokeStyle = isLight ? '#999999' : '#666666';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(-as, -as / 2); ctx.lineTo(0, 0); ctx.lineTo(-as, as / 2);
+      ctx.stroke();
+      ctx.restore();
     });
 
-    function refreshTextures() {
-      textures = projects.map(function (p) { return makeProjectTexture(p[0], p[1]); });
-      discMat.map = textures[currentImage];
-      discMat.needsUpdate = true;
+    /* HOVER TINT */
+    if (hoveredSegment >= 0 && hoveredSegment !== activeSegment) {
+      drawSegmentFill(hoveredSegment, 0.05, size, cx, cy);
     }
 
-    /* THEME: swap material colors */
-    window.addEventListener('themechange', function (ev) {
-      var isLight = ev.detail.light;
-      metalMat.color.set(isLight ? 0xd0d0d0 : 0x1a1a1a);
-      midMat.color.set(isLight ? 0xb8b8b8 : 0x2a2a2a);
-      innerMat.color.set(isLight ? 0xaaaaaa : 0x222222);
-      lineMat.color.set(isLight ? 0x999999 : 0x444444);
-      bMat.color.set(isLight ? 0x888888 : 0x666666);
-      refreshTextures();
-    });
-
-    /* Re-render textures once webfonts load */
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(function () {
-        try { refreshTextures(); } catch (e) {}
-      });
+    /* ACTIVE SEGMENT HIGHLIGHT */
+    if (activeSegment >= 0) {
+      drawSegmentFill(activeSegment, 0.08, size, cx, cy);
     }
 
-    return {
-      setImage: setImage,
-      getImage: function () { return currentImage; },
-      outerRing: outerRing,
-      canvas: renderer.domElement
-    };
+    /* CENTER VIEWPORT (project tile) */
+    var centerR = size * 0.18;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, centerR, 0, Math.PI * 2);
+    ctx.clip();
+    var tile = tiles[activeSegment];
+    var imgSize = centerR * 2.2;
+    ctx.drawImage(tile, cx - imgSize / 2, cy - imgSize / 2, imgSize, imgSize);
+    ctx.restore();
+
+    /* CENTER BORDER */
+    ctx.beginPath();
+    ctx.arc(cx, cy, centerR, 0, Math.PI * 2);
+    ctx.strokeStyle = isLight ? '#aaaaaa' : '#444444';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
   }
 
-  if (hasThree && !reduceMotion) {
-    try { dial = initDial(); } catch (e) { dial = null; }
-  }
-  if (!dial) {
-    var dialWrap = document.querySelector('.hero-dial-w');
-    if (dialWrap) dialWrap.classList.add('no-3d');
+  function drawSegmentFill(seg, alpha, size, cx, cy) {
+    /* Segment 0 centered at top, going clockwise */
+    var startAngle = (seg / 4) * Math.PI * 2 - Math.PI / 2 - Math.PI / 4;
+    var endAngle = startAngle + Math.PI / 2;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, size * 0.47, startAngle, endAngle);
+    ctx.closePath();
+    ctx.fillStyle = SEGMENTS[seg].color;
+    ctx.fill();
+    ctx.restore();
   }
 
-  /* Arm link active state + prev/next */
-  var armBtns = Array.prototype.slice.call(document.querySelectorAll('.btn-arm'));
-  function setActiveArm(idx) {
-    armBtns.forEach(function (b, i) { b.classList.toggle('active', i === idx % armBtns.length); });
+  /* HIT DETECTION — segment 0 centered at top */
+  function segmentAt(e) {
+    var rect = canvas.getBoundingClientRect();
+    var size = rect.width;
+    var mx = e.clientX - rect.left - size / 2;
+    var my = e.clientY - rect.top - size / 2;
+    var dist = Math.sqrt(mx * mx + my * my);
+    if (dist < size * 0.20 || dist > size * 0.50) return -1;
+    var angle = Math.atan2(my, mx) + Math.PI / 2 + Math.PI / 4;
+    if (angle < 0) angle += Math.PI * 2;
+    return Math.floor(angle / (Math.PI / 2)) % 4;
   }
+
+  canvas.addEventListener('click', function (e) {
+    var seg = segmentAt(e);
+    if (seg >= 0) triggerIrisTransition(seg);
+  });
+
+  canvas.addEventListener('mousemove', function (e) {
+    var seg = segmentAt(e);
+    canvas.style.cursor = seg >= 0 ? 'pointer' : 'default';
+    if (seg !== hoveredSegment) {
+      hoveredSegment = seg;
+      drawWheel();
+    }
+  });
+
+  canvas.addEventListener('mouseleave', function () {
+    if (hoveredSegment !== -1) {
+      hoveredSegment = -1;
+      drawWheel();
+    }
+  });
+
+  /* SLOW AUTO-ROTATION of labels */
+  var rotation = 0;
+  if (!reduceMotion) {
+    (function rotateDial() {
+      rotation -= 0.05;
+      wheelLabels.style.transform = 'rotate(' + rotation + 'deg)';
+      requestAnimationFrame(rotateDial);
+    })();
+  }
+
+  /* ───── ARM NAV ───── */
+  var armBtns = Array.prototype.slice.call(document.querySelectorAll('.arm-btn'));
+
+  function setActiveSegment(idx) {
+    activeSegment = ((idx % 4) + 4) % 4;
+    armBtns.forEach(function (b, i) { b.classList.toggle('active', i === activeSegment); });
+    drawWheel();
+  }
+
+  armBtns.forEach(function (btn, i) {
+    btn.addEventListener('click', function () { triggerIrisTransition(i); });
+  });
+
   var armPrev = document.querySelector('.arm-prev');
   var armNext = document.querySelector('.arm-next');
-  if (armPrev && dial) {
-    armPrev.addEventListener('click', function () {
-      dial.setImage(dial.getImage() - 1);
-      setActiveArm(((dial.getImage() - 1) % 4 + 4) % 4);
-    });
-  }
-  if (armNext && dial) {
-    armNext.addEventListener('click', function () {
-      dial.setImage(dial.getImage() + 1);
-      setActiveArm((dial.getImage() + 1) % 4);
+  if (armPrev) armPrev.addEventListener('click', function () { setActiveSegment(activeSegment - 1); });
+  if (armNext) armNext.addEventListener('click', function () { setActiveSegment(activeSegment + 1); });
+
+  /* ───── ⑥ IRIS TRANSITION ───── */
+  function triggerIrisTransition(segmentIndex) {
+    if (transitioning) return;
+    var targetPage = document.getElementById('page-' + SEGMENTS[segmentIndex].id);
+    if (!targetPage) return;
+
+    setActiveSegment(segmentIndex);
+
+    /* Fallback: no GSAP or reduced motion → instant swap */
+    if (!hasGSAP || reduceMotion) {
+      homePage.hidden = true;
+      subPages.forEach(function (p) { p.hidden = true; });
+      targetPage.hidden = false;
+      targetPage.style.opacity = '1';
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    transitioning = true;
+    glitchHeadline();
+    gsap.delayedCall(0.3, function () {
+      expandIris(targetPage, SEGMENTS[segmentIndex].color);
     });
   }
 
-  /* ── 10. SCROLL BEHAVIOR: pin hero, scroll drives dial ── */
-  var pinEnabled = hasST && !reduceMotion && !!dial &&
-    window.matchMedia('(min-width: 861px)').matches;
+  function glitchHeadline() {
+    var words = document.querySelectorAll('.hw');
+    gsap.timeline()
+      .to(words, {
+        x: function () { return (Math.random() - 0.5) * 30; },
+        y: function () { return (Math.random() - 0.5) * 20; },
+        opacity: 0.4,
+        duration: 0.15,
+        stagger: 0.02,
+        ease: 'none'
+      })
+      .to(words, {
+        x: function () { return (Math.random() - 0.5) * 15; },
+        y: function () { return (Math.random() - 0.5) * 10; },
+        duration: 0.1
+      })
+      .to(words, { x: 0, y: 0, opacity: 0, duration: 0.2 });
+  }
 
-  if (pinEnabled) {
-    ScrollTrigger.create({
-      trigger: '.hero-s',
-      start: 'top top',
-      end: '+=300%',
-      pin: true,
-      pinSpacing: true,
-      onUpdate: function (self) {
-        var newIndex = Math.min(3, Math.floor(self.progress * 4));
-        if (newIndex !== dial.getImage()) {
-          dial.setImage(newIndex);
-          setActiveArm(newIndex);
+  function expandIris(targetPage, accentColor) {
+    var wheelRect = canvas.getBoundingClientRect();
+    var originX = wheelRect.left + wheelRect.width / 2;
+    var originY = wheelRect.top + wheelRect.height / 2;
+
+    var maxR = Math.hypot(
+      Math.max(originX, window.innerWidth - originX),
+      Math.max(originY, window.innerHeight - originY)
+    );
+
+    var cx = (originX / window.innerWidth * 100).toFixed(1) + '%';
+    var cy = (originY / window.innerHeight * 100).toFixed(1) + '%';
+
+    irisOverlay.style.cssText =
+      'display:block;background:' + accentColor + ';clip-path:circle(0px at ' + cx + ' ' + cy + ');';
+
+    targetPage.hidden = false;
+    targetPage.style.opacity = '0';
+
+    gsap.timeline()
+      .to(irisOverlay, {
+        clipPath: 'circle(' + (maxR * 1.1) + 'px at ' + cx + ' ' + cy + ')',
+        duration: 0.8,
+        ease: 'power3.inOut',
+        onComplete: function () {
+          homePage.hidden = true;
+          window.scrollTo(0, 0);
         }
-        dial.outerRing.rotation.z = self.progress * Math.PI * 2;
-      }
-    });
-  } else if (dial) {
-    /* No pin (mobile / no ScrollTrigger): auto-cycle every 3s */
-    setInterval(function () {
-      var next = (dial.getImage() + 1) % 4;
-      dial.setImage(next);
-      setActiveArm(next);
-    }, 3000);
+      })
+      .to(targetPage, { opacity: 1, duration: 0.3 }, '-=0.4')
+      .to(irisOverlay, {
+        clipPath: 'circle(0px at 50% 50%)',
+        duration: 0.5,
+        ease: 'power3.inOut',
+        onComplete: function () {
+          irisOverlay.style.display = 'none';
+          transitioning = false;
+          revealSubPage(targetPage);
+        }
+      });
   }
 
-  /* ── 4. PRELOADER ── */
-  var preloader = document.querySelector('.preloader-w');
+  function revealSubPage(page) {
+    var headline = page.querySelector('.sub-title');
+    var content = page.querySelectorAll('.sub-quote > *');
+    if (headline) {
+      gsap.from(headline, { y: 60, opacity: 0, duration: 0.9, ease: 'power3.out' });
+    }
+    if (content.length) {
+      gsap.from(content, {
+        y: 40, opacity: 0, stagger: 0.1, duration: 0.6, ease: 'power2.out', delay: 0.3
+      });
+    }
+  }
+
+  /* ───── ⑧ GO BACK HOME (reverse iris) ───── */
+  function goBackHome() {
+    if (transitioning) return;
+
+    if (!hasGSAP || reduceMotion) {
+      showHomeInstant();
+      return;
+    }
+
+    transitioning = true;
+    irisOverlay.style.cssText =
+      'display:block;background:#121212;clip-path:circle(0px at 50% 50%);';
+
+    homePage.hidden = false;
+    homePage.style.opacity = '0';
+
+    gsap.timeline()
+      .to(irisOverlay, {
+        clipPath: 'circle(' + Math.hypot(window.innerWidth, window.innerHeight) + 'px at 50% 50%)',
+        duration: 0.7,
+        ease: 'power3.inOut',
+        onComplete: function () {
+          subPages.forEach(function (p) { p.hidden = true; });
+          window.scrollTo(0, 0);
+        }
+      })
+      .to(homePage, { opacity: 1, duration: 0.3 }, '-=0.3')
+      .to(irisOverlay, {
+        clipPath: 'circle(0px at 50% 50%)',
+        duration: 0.4,
+        ease: 'power3.in',
+        onComplete: function () {
+          irisOverlay.style.display = 'none';
+          transitioning = false;
+          gsap.to('.hw', { x: 0, y: 0, opacity: 1, duration: 0.5, stagger: 0.05 });
+          drawWheel();
+        }
+      });
+  }
+
+  document.querySelectorAll('.sub-back').forEach(function (btn) {
+    btn.addEventListener('click', goBackHome);
+  });
+
+  document.querySelectorAll('.sub-down').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var quote = btn.closest('.sub-page').querySelector('.sub-quote');
+      if (quote) quote.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+    });
+  });
+
+  /* Nav brand: go home */
+  document.getElementById('navBrand').addEventListener('click', function (e) {
+    if (isSubPageOpen()) {
+      e.preventDefault();
+      goBackHome();
+    }
+  });
+
+  /* ───── ④ PRELOADER ───── */
+  var preloader = document.querySelector('.preloader');
   var plDone = false;
 
   function revealHero() {
     if (hasGSAP && !reduceMotion) {
-      gsap.from('.hero-headline .word-inner', {
-        y: '110%', duration: 0.8, stagger: 0.06, ease: 'power3.out'
+      gsap.from('.hw', {
+        yPercent: 110, duration: 0.8, stagger: 0.07, ease: 'power3.out', delay: 0.1
       });
-      gsap.from('.hero-sub, .btn-w.is-main', {
-        y: 30, opacity: 0, duration: 0.6, stagger: 0.12, ease: 'power2.out', delay: 0.4
+      gsap.from('.wheel-container', {
+        scale: 0.5, rotation: -30, opacity: 0, duration: 1.2, ease: 'back.out(1.2)'
       });
-      if (dial && dial.canvas) {
-        gsap.from(dial.canvas, {
-          scale: 0.6, opacity: 0, rotation: -45, duration: 1.2,
-          ease: 'back.out(1.4)', delay: 0.2
-        });
-      }
+      gsap.from('.cta-btn', {
+        y: 30, opacity: 0, duration: 0.5, delay: 0.5, ease: 'power2.out'
+      });
     }
   }
 
   function endPreloader() {
     if (plDone) return;
     plDone = true;
-    if (hasGSAP && !reduceMotion && preloader) {
-      var tl2 = gsap.timeline();
-      tl2.to(preloader, { opacity: 0.7, duration: 0.05 })
-         .to(preloader, { opacity: 1, duration: 0.05 })
-         .to(preloader, {
-           opacity: 0, duration: 0.4, ease: 'power2.in',
-           onComplete: function () {
-             document.body.classList.add('site-ready');
-             revealHero();
-           }
-         });
-    } else {
-      document.body.classList.add('site-ready');
-      revealHero();
-    }
+    document.body.classList.add('site-ready');
+    revealHero();
   }
 
-  if (reduceMotion || !hasGSAP) {
+  if (!hasGSAP || reduceMotion) {
     endPreloader();
   } else {
-    var tl = gsap.timeline({ onComplete: function () { setTimeout(endPreloader, 200); } });
-    tl.from('.preloader-logo-w', {
-      scaleX: 0, transformOrigin: 'left center', duration: 0.6, ease: 'power3.out'
-    });
-    tl.from('.preloader-line', {
-      scaleX: 0, transformOrigin: 'left center', duration: 0.5, ease: 'power2.inOut'
-    }, '-=0.2');
-    tl.to({}, { duration: 0.5 });
-    /* hard fallback — never trap the visitor */
-    setTimeout(endPreloader, 3500);
+    var logo = document.querySelector('.preloader-logo');
+    var lineRed = document.querySelector('.line-red');
+    var lineGrey = document.querySelector('.line-grey');
+    var counter = document.querySelector('.preloader-count');
+    var dot = document.querySelector('.preloader-dot');
+
+    var tl = gsap.timeline({ onComplete: finishPreloader });
+
+    tl.from(logo, { opacity: 0, y: 20, duration: 0.4, ease: 'power2.out' });
+    tl.to(lineRed, { strokeDashoffset: 0, duration: 0.6, ease: 'power2.inOut' }, '-=0.1');
+    tl.to(lineGrey, { strokeDashoffset: 0, duration: 0.5, ease: 'power2.inOut' }, '<0.1');
+    tl.to({}, {
+      duration: 0.8,
+      ease: 'power1.inOut',
+      onUpdate: function () {
+        counter.textContent = Math.round(this.progress() * 100);
+      }
+    }, 0);
+
+    function finishPreloader() {
+      var tl2 = gsap.timeline();
+      tl2.to([lineRed, lineGrey], { opacity: 0, duration: 0.2 })
+         .to(counter, { opacity: 0, duration: 0.2 }, '<')
+         .to(logo, { opacity: 0, duration: 0.3 })
+         .to(dot, { opacity: 1, duration: 0.15 }, '<')
+         .to(dot, { scale: 0, duration: 0.5, ease: 'power3.in' })
+         .to(preloader, {
+           opacity: 0, duration: 0.3,
+           onComplete: endPreloader
+         });
+    }
+
+    /* Hard fallback — never trap the visitor */
+    setTimeout(endPreloader, 4000);
   }
 
-  /* ── Section reveals (IntersectionObserver, framework-free) ── */
+  /* ───── SECTION REVEALS ───── */
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       if (entry.isIntersecting) {
@@ -1577,6 +1814,10 @@ html.is-light .toggle-thumb {
     });
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
   document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+
+  /* ───── INIT ───── */
+  resizeCanvas();
+  setActiveSegment(0);
 
 })();
 </script>
