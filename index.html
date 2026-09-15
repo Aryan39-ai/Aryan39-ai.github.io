@@ -1,379 +1,95 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aryan Shresthacharya — Developer</title>
-<meta name="description" content="Aryan Shresthacharya — full-stack developer, AI/ML engineer, and web studio founder in Sydney.">
-<meta property="og:title" content="Aryan Shresthacharya — Developer">
-<meta property="og:description" content="Full-stack developer · AI/ML engineer · Sydney.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='9' fill='%23e0301f'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-
-:root{
-  --bg:#ffffff;
-  --text:#141414;
-  --muted:#6b6b6b;
-  --line:#e6e6e6;
-  --red:#e0301f;
-  --red-soft:#fdeceb;
-  --wrap:1080px;
-  --pad:clamp(1.25rem,5vw,2.5rem);
-  --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
-}
-
-html{scroll-behavior:smooth}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-
-body{
-  font-family:var(--font);
-  background:var(--bg);
-  color:var(--text);
-  font-size:17px;
-  line-height:1.65;
-  -webkit-font-smoothing:antialiased;
-}
-
-a{color:inherit;text-decoration:none}
-::selection{background:var(--red);color:#fff}
-
-.wrap{max-width:var(--wrap);margin:0 auto;padding-left:var(--pad);padding-right:var(--pad)}
-
-/* ── NAV ── */
-.nav{
-  position:sticky;top:0;z-index:50;
-  background:rgba(255,255,255,.88);
-  backdrop-filter:saturate(180%) blur(12px);
-  border-bottom:1px solid var(--line);
-}
-.nav-inner{
-  max-width:var(--wrap);margin:0 auto;
-  padding:.9rem var(--pad);
-  display:flex;align-items:center;justify-content:space-between;gap:1rem;
-}
-.brand{font-weight:700;letter-spacing:-.02em;font-size:1.05rem}
-.brand span{color:var(--red)}
-.nav-links{display:flex;gap:1.6rem;font-size:.92rem;color:var(--muted)}
-.nav-links a{transition:color .15s ease}
-.nav-links a:hover{color:var(--red)}
-@media (max-width:640px){.nav-links{gap:1.1rem;font-size:.85rem}.nav-links .hide-sm{display:none}}
-
-/* ── HERO ── */
-.hero{padding:clamp(4rem,12vw,8rem) 0 clamp(3rem,7vw,5rem)}
-.eyebrow{
-  display:inline-flex;align-items:center;gap:.5rem;
-  font-size:.82rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;
-  color:var(--red);background:var(--red-soft);
-  padding:.35rem .75rem;border-radius:100px;margin-bottom:1.5rem;
-}
-.dot{width:6px;height:6px;border-radius:50%;background:var(--red)}
-h1{
-  font-size:clamp(2.4rem,6.5vw,4rem);
-  line-height:1.08;letter-spacing:-.035em;font-weight:700;
-  max-width:16ch;
-}
-h1 em{font-style:normal;color:var(--red)}
-.hero p{
-  margin-top:1.4rem;max-width:56ch;
-  font-size:clamp(1.02rem,1.6vw,1.15rem);color:var(--muted);
-}
-.hero-actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:2.2rem}
-.btn{
-  display:inline-flex;align-items:center;gap:.5rem;
-  padding:.7rem 1.35rem;border-radius:100px;
-  font-size:.95rem;font-weight:500;
-  border:1px solid var(--line);
-  transition:background .18s ease,color .18s ease,border-color .18s ease,transform .18s ease;
-}
-.btn:hover{transform:translateY(-1px)}
-.btn-primary{background:var(--red);border-color:var(--red);color:#fff}
-.btn-primary:hover{background:#c22617;border-color:#c22617}
-.btn-ghost:hover{border-color:var(--red);color:var(--red)}
-
-/* ── SECTIONS ── */
-section{padding:clamp(3rem,7vw,4.5rem) 0}
-.sec-head{
-  display:flex;align-items:baseline;gap:.9rem;
-  margin-bottom:2.2rem;padding-bottom:.9rem;
-  border-bottom:1px solid var(--line);
-}
-.sec-num{font-size:.8rem;font-weight:600;color:var(--red);letter-spacing:.06em}
-.sec-head h2{font-size:1.35rem;font-weight:600;letter-spacing:-.02em}
-
-/* ── ABOUT ── */
-.about{display:grid;grid-template-columns:1.5fr 1fr;gap:clamp(2rem,5vw,4rem);align-items:start}
-.about p+p{margin-top:1rem}
-.about strong{font-weight:600;color:var(--text);box-shadow:inset 0 -.4em 0 var(--red-soft)}
-.meta{border-top:1px solid var(--line)}
-.meta-row{
-  display:flex;justify-content:space-between;gap:1rem;
-  padding:.7rem 0;border-bottom:1px solid var(--line);
-  font-size:.92rem;
-}
-.meta-k{color:var(--muted)}
-.meta-v{text-align:right;font-weight:500}
-@media (max-width:760px){.about{grid-template-columns:1fr}}
-
-/* ── PROJECTS ── */
-.proj{
-  display:grid;grid-template-columns:auto 1fr auto;gap:1.5rem;
-  padding:1.6rem 0;border-bottom:1px solid var(--line);
-  align-items:start;
-}
-.proj:first-child{border-top:1px solid var(--line)}
-.proj-num{font-size:.8rem;font-weight:600;color:var(--red);padding-top:.35rem}
-.proj h3{font-size:1.25rem;font-weight:600;letter-spacing:-.02em}
-.proj .one{color:var(--muted);margin-top:.2rem}
-.proj .tech{
-  font-size:.83rem;color:var(--muted);margin-top:.55rem;
-  padding-top:.55rem;border-top:1px dashed var(--line);
-}
-.proj ul{list-style:none;margin-top:.7rem;display:grid;gap:.3rem}
-.proj li{font-size:.92rem;color:var(--muted);padding-left:1rem;position:relative}
-.proj li::before{content:"";position:absolute;left:0;top:.65em;width:5px;height:5px;border-radius:50%;background:var(--red)}
-.links{display:flex;flex-direction:column;gap:.4rem;align-items:flex-end}
-.link{
-  font-size:.87rem;font-weight:500;white-space:nowrap;
-  border-bottom:1px solid var(--line);padding-bottom:1px;
-  transition:color .15s ease,border-color .15s ease;
-}
-.link:hover{color:var(--red);border-color:var(--red)}
-.link.demo{color:var(--red);border-color:var(--red-soft)}
-@media (max-width:700px){
-  .proj{grid-template-columns:auto 1fr}
-  .links{grid-column:2;flex-direction:row;align-items:center;gap:1rem;justify-content:flex-start;margin-top:.6rem}
-}
-
-/* ── DEMOS ── */
-.demo-label{
-  font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--muted);margin:2.6rem 0 1.1rem;
-}
-.demos{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
-.card{
-  border:1px solid var(--line);border-radius:14px;padding:1.3rem;
-  display:flex;flex-direction:column;
-  transition:border-color .18s ease,transform .18s ease,box-shadow .18s ease;
-}
-.card:hover{border-color:var(--red);transform:translateY(-2px);box-shadow:0 6px 22px rgba(224,48,31,.07)}
-.card h3{font-size:1.05rem;font-weight:600;letter-spacing:-.01em}
-.card .one{font-size:.92rem;color:var(--muted);margin-top:.35rem;flex:1}
-.card .tech{font-size:.8rem;color:var(--muted);margin-top:.8rem}
-.card .acts{display:flex;gap:1rem;margin-top:1rem}
-
-/* ── SKILLS ── */
-.skill{
-  display:grid;grid-template-columns:200px 1fr;gap:1.5rem;
-  padding:.95rem 0;border-bottom:1px solid var(--line);
-}
-.skill:first-child{border-top:1px solid var(--line)}
-.sk-k{font-weight:600;font-size:.95rem}
-.sk-v{color:var(--muted);font-size:.95rem}
-@media (max-width:640px){.skill{grid-template-columns:1fr;gap:.25rem}}
-
-/* ── CONTACT ── */
-.contact{border-top:1px solid var(--line)}
-.contact h2{font-size:clamp(1.9rem,5vw,2.8rem);font-weight:700;letter-spacing:-.03em;line-height:1.1}
-.contact h2 em{font-style:normal;color:var(--red)}
-.contact p{margin-top:1rem;color:var(--muted);max-width:52ch}
-.mail{
-  display:inline-block;margin-top:1.8rem;
-  font-size:clamp(1.05rem,2.4vw,1.4rem);font-weight:600;letter-spacing:-.02em;
-  border-bottom:2px solid var(--red);padding-bottom:2px;
-  transition:color .15s ease;
-}
-.mail:hover{color:var(--red)}
-.socials{display:flex;gap:1.4rem;margin-top:1.8rem;font-size:.95rem}
-.socials a{border-bottom:1px solid var(--line);padding-bottom:1px;transition:color .15s,border-color .15s}
-.socials a:hover{color:var(--red);border-color:var(--red)}
-
-/* ── FOOTER ── */
-footer.site{
-  border-top:1px solid var(--line);
-  padding:1.6rem 0;margin-top:2rem;
-  font-size:.85rem;color:var(--muted);
-  display:flex;flex-wrap:wrap;gap:.6rem;justify-content:space-between;
-}
-footer.site a:hover{color:var(--red)}
-.heart{color:var(--red)}
-
-/* ── REVEAL ── */
-.reveal{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
-.reveal.in{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portfolio of Aryan Shresthacharya, a full-stack developer based in Sydney.">
+  <title>Aryan Shresthacharya | Portfolio</title>
+  <style>
+    :root { --red: #c82318; --black: #1c1c1c; --grey: #666; --line: #dedede; --page: 760px; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: var(--black); background: #fff; font-size: 16px; line-height: 1.6; }
+    a { color: inherit; }
+    a:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+    header, main, footer { max-width: var(--page); margin: auto; padding-left: 24px; padding-right: 24px; }
+    header { display: flex; justify-content: space-between; align-items: center; padding-top: 22px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+    .name { font-weight: 700; text-decoration: none; }
+    nav { display: flex; gap: 16px; }
+    nav a { color: var(--grey); font-size: 14px; text-decoration: none; }
+    nav a:hover { color: var(--red); }
+    section { padding: 52px 0; border-bottom: 1px solid var(--line); }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { font-size: clamp(34px, 7vw, 54px); line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 16px; }
+    h2 { font-size: 22px; margin-bottom: 22px; }
+    h3 { font-size: 18px; margin-bottom: 4px; }
+    .red { color: var(--red); }
+    .intro { max-width: 620px; font-size: 18px; color: var(--grey); }
+    .button { display: inline-block; margin-top: 10px; padding: 11px 16px; border: 2px solid var(--red); background: var(--red); color: white; font-weight: 700; text-decoration: none; }
+    .button:hover { background: #a91d14; border-color: #a91d14; }
+    .project { padding: 20px 0; border-top: 1px solid var(--line); }
+    .project p { color: var(--grey); margin-bottom: 8px; }
+    .project a, .email { color: var(--red); font-weight: 700; }
+    .skills { margin: 0; padding-left: 20px; }
+    .skills li { margin-bottom: 8px; }
+    .contact p { font-size: 18px; }
+    .email { font-size: 18px; }
+    footer { padding-top: 20px; padding-bottom: 32px; color: var(--grey); font-size: 14px; }
+    @media (max-width: 480px) { header { align-items: flex-start; gap: 12px; flex-direction: column; } section { padding: 38px 0; } h1 { font-size: 38px; } }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
 </head>
 <body>
-
-<header class="nav">
-  <div class="nav-inner">
-    <a class="brand" href="#top">Aryan Shresthacharya<span>.</span></a>
-    <nav class="nav-links">
-      <a href="#about">About</a>
+  <header>
+    <a class="name" href="#top">Aryan Shresthacharya</a>
+    <nav aria-label="Main navigation">
       <a href="#projects">Projects</a>
-      <a href="#skills" class="hide-sm">Skills</a>
+      <a href="#skills">Skills</a>
       <a href="#contact">Contact</a>
     </nav>
-  </div>
-</header>
-
-<main class="wrap" id="top">
-
-  <!-- HERO -->
-  <section class="hero">
-    <span class="eyebrow"><span class="dot"></span> Open to opportunities · Sydney</span>
-    <h1>Full-stack developer building for the <em>real world.</em></h1>
-    <p>I build accessible, fast software — from a medication tracker for elderly users to a real-time sign language recognition system running at 97% accuracy. Currently finishing a Bachelor of IT at ACU.</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="#projects">View projects</a>
-      <a class="btn btn-ghost" href="mailto:rnacharya39@gmail.com">Get in touch</a>
-    </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="sec-head"><span class="sec-num">01</span><h2>About</h2></div>
-    <div class="about">
-      <div class="reveal">
-        <p>I'm a developer who learns by <strong>shipping real things</strong>. My projects range from a medication tracker for elderly users to a real-time sign language recognition system hitting <strong>97% accuracy</strong> with under 50ms latency.</p>
-        <p>I speak <strong>English, Nepali, and Japanese</strong> fluently, run a small web studio called A®, and I'm completing my Bachelor of IT at ACU (graduating 2026).</p>
-        <p>What I care about: software that's accessible, fast, and actually useful for the person on the other side of the screen.</p>
-      </div>
-      <div class="meta reveal">
-        <div class="meta-row"><span class="meta-k">Base</span><span class="meta-v">Sydney, Australia</span></div>
-        <div class="meta-row"><span class="meta-k">Education</span><span class="meta-v">Bachelor of IT, ACU — 2026</span></div>
-        <div class="meta-row"><span class="meta-k">Languages</span><span class="meta-v">English · Nepali · Japanese</span></div>
-        <div class="meta-row"><span class="meta-k">Status</span><span class="meta-v">Open to opportunities</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PROJECTS -->
-  <section id="projects">
-    <div class="sec-head"><span class="sec-num">02</span><h2>Projects</h2></div>
-
-    <article class="proj reveal">
-      <span class="proj-num">01</span>
-      <div>
+  </header>
+  <main id="top">
+    <section>
+      <h1>Hi, I’m Aryan.<br>I build <span class="red">useful software.</span></h1>
+      <p class="intro">I am a full-stack developer based in Sydney and a Bachelor of IT student at ACU. I build web, mobile, and machine-learning projects that solve everyday problems.</p>
+      <a class="button" href="#projects">See my projects</a>
+    </section>
+    <section id="projects">
+      <h2>Projects</h2>
+      <article class="project">
         <h3>SignBridge</h3>
-        <p class="one">Real-time sign language recognition on the desktop.</p>
-        <ul>
-          <li>97% accuracy on static signs, 89% on dynamic gestures</li>
-          <li>Under 50ms latency, runs fully offline</li>
-          <li>Built-in training workflow and text-to-speech output</li>
-        </ul>
-        <p class="tech">Python · PyQt6 · MediaPipe · scikit-learn · OpenCV</p>
-      </div>
-      <div class="links"><a class="link" href="https://github.com/Aryan39-ai/SLRS" target="_blank" rel="noopener">GitHub</a></div>
-    </article>
-
-    <article class="proj reveal">
-      <span class="proj-num">02</span>
-      <div>
+        <p>A desktop app that recognises sign language in real time and turns it into text and speech.</p>
+        <p><strong>Built with:</strong> Python, MediaPipe, OpenCV, scikit-learn</p>
+        <a href="https://github.com/Aryan39-ai/SLRS" target="_blank" rel="noopener">View on GitHub</a>
+      </article>
+      <article class="project">
         <h3>MediRemind</h3>
-        <p class="one">Medication adherence tracking for elderly users and their caregivers.</p>
-        <ul>
-          <li>Today's-dose dashboard with full medication CRUD</li>
-          <li>30-day adherence history and caregiver read-only access</li>
-          <li>Accessibility-first: large tap targets, high contrast mode</li>
-        </ul>
-        <p class="tech">ASP.NET Core 8 · EF Core · SQLite · Tailwind · BCrypt · PWA</p>
-      </div>
-      <div class="links"><a class="link" href="https://github.com/Aryan39-ai/MediRemind" target="_blank" rel="noopener">GitHub</a></div>
-    </article>
-
-    <article class="proj reveal">
-      <span class="proj-num">03</span>
-      <div>
+        <p>A medication tracker designed for elderly users and their caregivers.</p>
+        <p><strong>Built with:</strong> ASP.NET Core, SQLite, Tailwind CSS</p>
+        <a href="https://github.com/Aryan39-ai/MediRemind" target="_blank" rel="noopener">View on GitHub</a>
+      </article>
+      <article class="project">
         <h3>WeatherApp</h3>
-        <p class="one">Cross-platform weather with a hand-built particle animation engine.</p>
-        <ul>
-          <li>One C# codebase for Android, iOS, macOS, and Windows</li>
-          <li>Custom IDrawable engine animating 8 weather states</li>
-          <li>xUnit test suite for JSON parsing and formatting</li>
-        </ul>
-        <p class="tech">.NET MAUI · C# · XAML · OpenWeatherMap · xUnit</p>
-      </div>
-      <div class="links"><a class="link" href="https://github.com/Aryan39-ai/WeatherApp" target="_blank" rel="noopener">GitHub</a></div>
-    </article>
-
-    <p class="demo-label">Live demos</p>
-    <div class="demos">
-      <article class="card reveal">
-        <h3>Currency Converter</h3>
-        <p class="one">Live conversion across 15 currencies with a 30-day trend chart.</p>
-        <p class="tech">JavaScript · Chart.js · Frankfurter API</p>
-        <div class="acts"><a class="link demo" href="./currency-converter/">Live demo</a><a class="link" href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a></div>
+        <p>A cross-platform weather app with custom animations for different weather conditions.</p>
+        <p><strong>Built with:</strong> .NET MAUI, C#, XAML</p>
+        <a href="https://github.com/Aryan39-ai/WeatherApp" target="_blank" rel="noopener">View on GitHub</a>
       </article>
-      <article class="card reveal">
-        <h3>Expense Tracker</h3>
-        <p class="one">Personal expense tracking with live charts and CSV export.</p>
-        <p class="tech">JavaScript · Chart.js · localStorage</p>
-        <div class="acts"><a class="link demo" href="./expense-tracker/">Live demo</a><a class="link" href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a></div>
-      </article>
-      <article class="card reveal">
-        <h3>GitHub Lookup</h3>
-        <p class="one">Search any GitHub user — profile, top repos, language stats.</p>
-        <p class="tech">JavaScript · GitHub REST API</p>
-        <div class="acts"><a class="link demo" href="./github-lookup/">Live demo</a><a class="link" href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a></div>
-      </article>
-      <article class="card reveal">
-        <h3>Pomodoro Timer</h3>
-        <p class="one">Focused work timer with custom durations and session tracking.</p>
-        <p class="tech">JavaScript · Web Audio · localStorage · SVG</p>
-        <div class="acts"><a class="link demo" href="./pomodoro/">Live demo</a><a class="link" href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a></div>
-      </article>
-    </div>
-  </section>
-
-  <!-- SKILLS -->
-  <section id="skills">
-    <div class="sec-head"><span class="sec-num">03</span><h2>Skills</h2></div>
-    <div class="skill reveal"><span class="sk-k">Languages</span><span class="sk-v">Python · C# · JavaScript · TypeScript · Kotlin · SQL</span></div>
-    <div class="skill reveal"><span class="sk-k">Web &amp; Mobile</span><span class="sk-v">ASP.NET Core · .NET MAUI · React · Jetpack Compose · Tailwind CSS · PWA</span></div>
-    <div class="skill reveal"><span class="sk-k">Machine Learning</span><span class="sk-v">scikit-learn · MediaPipe · OpenCV · TensorFlow/Keras</span></div>
-    <div class="skill reveal"><span class="sk-k">Tools</span><span class="sk-v">Git · GitHub · xUnit · EF Core · SQLite · REST APIs · Vercel</span></div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact" class="contact">
-    <div class="reveal">
-      <h2>Let's build <em>together.</em></h2>
-      <p>Open to junior developer roles, internships, and freelance web work in Sydney or remote.</p>
-      <a class="mail" href="mailto:rnacharya39@gmail.com">rnacharya39@gmail.com</a>
-      <div class="socials">
-        <a href="https://www.linkedin.com/in/aryan-shresthacharya-405b1b30a/" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </div>
-  </section>
-
-  <footer class="site">
-    <span>© 2026 Aryan Shresthacharya. Built with <span class="heart">♥</span> in Sydney.</span>
-    <a href="https://github.com/Aryan39-ai/Aryan39-ai.github.io" target="_blank" rel="noopener">View source</a>
-  </footer>
-
-</main>
-
-<script>
-(function(){
-  var els = document.querySelectorAll('.reveal');
-  if (!('IntersectionObserver' in window)) {
-    els.forEach(function(e){ e.classList.add('in'); });
-    return;
-  }
-  var io = new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      if (entry.isIntersecting) { entry.target.classList.add('in'); io.unobserve(entry.target); }
-    });
-  }, { rootMargin: '0px 0px -60px 0px' });
-  els.forEach(function(e){ io.observe(e); });
-})();
-</script>
-
+    </section>
+    <section id="skills">
+      <h2>Skills</h2>
+      <ul class="skills">
+        <li><strong>Languages:</strong> Python, C#, JavaScript, SQL</li>
+        <li><strong>Web and mobile:</strong> ASP.NET Core, .NET MAUI, React, Tailwind CSS</li>
+        <li><strong>Tools:</strong> Git, GitHub, SQLite, REST APIs</li>
+      </ul>
+    </section>
+    <section id="contact" class="contact">
+      <h2>Contact</h2>
+      <p>I am open to junior developer roles, internships, and freelance work.</p>
+      <a class="email" href="mailto:rnacharya39@gmail.com">rnacharya39@gmail.com</a>
+      <p><a href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a> · <a href="https://www.linkedin.com/in/aryan-shresthacharya-405b1b30a/" target="_blank" rel="noopener">LinkedIn</a></p>
+    </section>
+  </main>
+  <footer>© 2026 Aryan Shresthacharya · Sydney, Australia</footer>
 </body>
 </html>
