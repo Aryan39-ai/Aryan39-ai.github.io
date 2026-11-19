@@ -1,95 +1,303 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-AU">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Portfolio of Aryan Shresthacharya, a full-stack developer based in Sydney.">
-  <title>Aryan Shresthacharya | Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aryan Shresthacharya | IT and Software Development</title>
+  <meta name="description" content="Aryan Shresthacharya is an early-career IT professional in Sydney. Explore published WordPress work, an ACU research lab website prototype, and software projects.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Aryan Shresthacharya | IT and Software Development">
+  <meta property="og:description" content="Published WordPress work, an ACU research placement, and selected software projects.">
+  <meta property="og:url" content="https://aryan39-ai.github.io/">
+  <link rel="canonical" href="https://aryan39-ai.github.io/">
   <style>
-    :root { --red: #c82318; --black: #1c1c1c; --grey: #666; --line: #dedede; --page: 760px; }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: var(--black); background: #fff; font-size: 16px; line-height: 1.6; }
-    a { color: inherit; }
-    a:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
-    header, main, footer { max-width: var(--page); margin: auto; padding-left: 24px; padding-right: 24px; }
-    header { display: flex; justify-content: space-between; align-items: center; padding-top: 22px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
-    .name { font-weight: 700; text-decoration: none; }
-    nav { display: flex; gap: 16px; }
-    nav a { color: var(--grey); font-size: 14px; text-decoration: none; }
-    nav a:hover { color: var(--red); }
-    section { padding: 52px 0; border-bottom: 1px solid var(--line); }
-    h1, h2, h3, p { margin-top: 0; }
-    h1 { font-size: clamp(34px, 7vw, 54px); line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 16px; }
-    h2 { font-size: 22px; margin-bottom: 22px; }
-    h3 { font-size: 18px; margin-bottom: 4px; }
-    .red { color: var(--red); }
-    .intro { max-width: 620px; font-size: 18px; color: var(--grey); }
-    .button { display: inline-block; margin-top: 10px; padding: 11px 16px; border: 2px solid var(--red); background: var(--red); color: white; font-weight: 700; text-decoration: none; }
-    .button:hover { background: #a91d14; border-color: #a91d14; }
-    .project { padding: 20px 0; border-top: 1px solid var(--line); }
-    .project p { color: var(--grey); margin-bottom: 8px; }
-    .project a, .email { color: var(--red); font-weight: 700; }
-    .skills { margin: 0; padding-left: 20px; }
-    .skills li { margin-bottom: 8px; }
-    .contact p { font-size: 18px; }
-    .email { font-size: 18px; }
-    footer { padding-top: 20px; padding-bottom: 32px; color: var(--grey); font-size: 14px; }
-    @media (max-width: 480px) { header { align-items: flex-start; gap: 12px; flex-direction: column; } section { padding: 38px 0; } h1 { font-size: 38px; } }
-    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    :root {
+      color-scheme: light dark;
+      --background: #faf8f5;
+      --surface: #fffdfb;
+      --ink: #231b19;
+      --muted: #5e514c;
+      --accent: #a32e24;
+      --accent-hover: #7e231b;
+      --button-text: #fff;
+      --line: #e2d8d1;
+      --soft: #f1e8e2;
+      --page: 1080px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background: #1d1817;
+        --surface: #261e1c;
+        --ink: #fff8f3;
+        --muted: #d2c0b8;
+        --accent: #ffad9e;
+        --accent-hover: #ffd0c5;
+        --button-text: #2c160f;
+        --line: #55433d;
+        --soft: #372923;
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--background);
+      font: 1rem/1.6 system-ui, sans-serif;
+    }
+    a { color: var(--accent); text-underline-offset: .24em; }
+    a:hover { color: var(--accent-hover); }
+    a:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+    h1, h2, h3, p, figure { margin: 0; }
+    h1, h2 { font-family: Georgia, serif; font-weight: 700; }
+    h1 { font-size: clamp(2.2rem, 6vw, 4.65rem); line-height: .99; letter-spacing: -.055em; }
+    h2 { font-size: clamp(1.95rem, 4vw, 2.8rem); line-height: 1.12; letter-spacing: -.035em; }
+    h3 { font-size: 1.2rem; line-height: 1.3; letter-spacing: -.02em; }
+    section { padding-block: clamp(2.5rem, 6vw, 4.5rem); border-top: 1px solid var(--line); }
+
+    .shell { width: min(var(--page), calc(100% - 3rem)); margin-inline: auto; }
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      padding: .65rem 1rem;
+      background: var(--surface);
+      transform: translateY(calc(-100% - 2rem));
+    }
+    .skip-link:focus { transform: none; z-index: 1; }
+    .site-header, .site-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: .5rem 1.5rem;
+      flex-wrap: wrap;
+    }
+    .site-header { padding-block: .8rem; }
+    .site-header a, .site-footer a, .link-row a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+    .site-header a { text-decoration: none; }
+    .brand { color: var(--ink); font-weight: 750; }
+    .site-nav, .link-row { display: flex; flex-wrap: wrap; gap: 0 1.15rem; }
+    .site-nav a { color: var(--muted); font-size: .9375rem; font-weight: 600; }
+    .site-nav a:hover { color: var(--accent); text-decoration: underline; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      align-items: center;
+      gap: clamp(1.5rem, 5vw, 4.5rem);
+      padding-block: clamp(3rem, 8vw, 6.25rem);
+    }
+    .hero-location, .meta {
+      color: var(--accent);
+      font-size: .875rem;
+      font-weight: 680;
+      letter-spacing: .02em;
+    }
+    .hero-location { margin-bottom: .75rem; }
+    .hero-role { margin-top: 1rem; font-size: clamp(1.13rem, 2.5vw, 1.4rem); font-weight: 680; }
+    .intro, .card p:not(.meta), .contact p { color: var(--muted); }
+    .intro { margin-top: .65rem; max-width: 48ch; }
+    .hero .link-row { margin-top: 1.4rem; align-items: center; }
+    .button {
+      padding: .55rem .95rem;
+      border-radius: .35rem;
+      color: var(--button-text);
+      background: var(--accent);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .button:hover { color: var(--button-text); background: var(--accent-hover); }
+
+    .featured {
+      padding: .65rem;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: .8rem;
+    }
+    .featured img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: .45rem;
+    }
+    .featured figcaption { padding: .25rem .45rem 0; }
+    .featured a { color: var(--ink); }
+    .featured a:hover { color: var(--accent); }
+
+    .grid { display: grid; gap: 1rem; margin-top: 1.5rem; }
+    .experience-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .projects-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: .55rem;
+      border: 1px solid var(--line);
+      border-radius: .75rem;
+      padding: clamp(1rem, 2.7vw, 1.65rem);
+      background: var(--surface);
+    }
+    .card .link-row { margin-top: auto; padding-top: .15rem; }
+    .link-row a { font-weight: 670; }
+    .card .tools { margin-top: .25rem; font-size: .875rem; }
+    .credentials { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2.5rem; margin-top: 1.5rem; }
+    .credentials ul { padding-left: 1.25rem; margin: .65rem 0 0; color: var(--muted); }
+    .credentials li + li { margin-top: .4rem; }
+    .skills { margin: .65rem 0 0; }
+    .skills dt { font-weight: 700; }
+    .skills dd { margin: .2rem 0 0; color: var(--muted); }
+    .skills div + div { margin-top: .8rem; }
+
+    .contact p { margin-top: .65rem; }
+    .contact .link-row { margin-top: .8rem; }
+    .site-footer { padding-block: .9rem; color: var(--muted); font-size: .875rem; }
+
+    @media (max-width: 800px) {
+      .hero { grid-template-columns: 1fr; }
+      .featured { max-width: 35rem; }
+      .projects-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 560px) {
+      .shell { width: calc(100% - 2rem); }
+      .site-header { gap: 0; }
+      .site-nav { width: 100%; gap: 0 .9rem; }
+      .experience-grid, .projects-grid, .credentials { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
-<body>
-  <header>
-    <a class="name" href="#top">Aryan Shresthacharya</a>
-    <nav aria-label="Main navigation">
+<body id="top">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header shell">
+    <a class="brand" href="#top">Aryan Shresthacharya</a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="#experience">Experience</a>
       <a href="#projects">Projects</a>
       <a href="#skills">Skills</a>
       <a href="#contact">Contact</a>
     </nav>
   </header>
-  <main id="top">
-    <section>
-      <h1>Hi, I’m Aryan.<br>I build <span class="red">useful software.</span></h1>
-      <p class="intro">I am a full-stack developer based in Sydney and a Bachelor of IT student at ACU. I build web, mobile, and machine-learning projects that solve everyday problems.</p>
-      <a class="button" href="#projects">See my projects</a>
+
+  <main class="shell" id="main" tabindex="-1">
+    <section class="hero" aria-labelledby="portfolio-name">
+      <div>
+        <p class="hero-location">Sydney, Australia</p>
+        <h1 id="portfolio-name">Aryan<br>Shresthacharya</h1>
+        <p class="hero-role">IT support and software development</p>
+        <p class="intro">I study Information Technology at Australian Catholic University. I’ve published WordPress pages for Little Dreamers Australia, built a research lab website prototype, and developed web and mobile applications.</p>
+        <div class="link-row">
+          <a class="button" href="#experience">See my work</a>
+          <a href="mailto:rnacharya39@gmail.com">Email me</a>
+        </div>
+      </div>
+      <figure class="featured">
+        <img src="assets/little-dreamers-annual-reports.webp" width="906" height="650" alt="Annual reports section showing the latest report, earlier reports and the archive control.">
+        <figcaption class="link-row">
+          <a href="https://littledreamers.org.au/our-impact/reports/">Reports page for Little Dreamers Australia</a>
+        </figcaption>
+      </figure>
     </section>
-    <section id="projects">
-      <h2>Projects</h2>
-      <article class="project">
-        <h3>SignBridge</h3>
-        <p>A desktop app that recognises sign language in real time and turns it into text and speech.</p>
-        <p><strong>Built with:</strong> Python, MediaPipe, OpenCV, scikit-learn</p>
-        <a href="https://github.com/Aryan39-ai/SLRS" target="_blank" rel="noopener">View on GitHub</a>
-      </article>
-      <article class="project">
-        <h3>MediRemind</h3>
-        <p>A medication tracker designed for elderly users and their caregivers.</p>
-        <p><strong>Built with:</strong> ASP.NET Core, SQLite, Tailwind CSS</p>
-        <a href="https://github.com/Aryan39-ai/MediRemind" target="_blank" rel="noopener">View on GitHub</a>
-      </article>
-      <article class="project">
-        <h3>WeatherApp</h3>
-        <p>A cross-platform weather app with custom animations for different weather conditions.</p>
-        <p><strong>Built with:</strong> .NET MAUI, C#, XAML</p>
-        <a href="https://github.com/Aryan39-ai/WeatherApp" target="_blank" rel="noopener">View on GitHub</a>
-      </article>
+
+    <section id="experience" aria-labelledby="experience-heading">
+      <h2 id="experience-heading">Technology experience</h2>
+      <div class="grid experience-grid">
+        <article class="card">
+          <p class="meta">Volunteer Web Developer · 2026</p>
+          <h3>Little Dreamers Australia</h3>
+          <p>Redesigned and published two WordPress pages for a charity supporting young carers. I worked from stakeholder mockups, updated site navigation, added an expandable annual report archive and checked both pages on desktop and mobile.</p>
+          <div class="link-row">
+            <a href="https://littledreamers.org.au/our-impact/">View Our Impact</a>
+            <a href="https://littledreamers.org.au/our-impact/reports/">View Reports</a>
+          </div>
+        </article>
+        <article class="card">
+          <p class="meta">Research Assistant Internship · 2026</p>
+          <h3>AI for Decision Excellence Lab, ACU</h3>
+          <p>Built a student prototype that brings together the lab’s research themes, member profiles and publications. I reviewed comparable university websites, refined the prototype after supervisor feedback, and documented how to update it.</p>
+          <div class="link-row">
+            <a href="https://aryan39-ai.github.io/aidx-simple/">View student prototype</a>
+          </div>
+        </article>
+      </div>
     </section>
-    <section id="skills">
-      <h2>Skills</h2>
-      <ul class="skills">
-        <li><strong>Languages:</strong> Python, C#, JavaScript, SQL</li>
-        <li><strong>Web and mobile:</strong> ASP.NET Core, .NET MAUI, React, Tailwind CSS</li>
-        <li><strong>Tools:</strong> Git, GitHub, SQLite, REST APIs</li>
-      </ul>
+
+    <section id="projects" aria-labelledby="projects-heading">
+      <h2 id="projects-heading">Software projects</h2>
+      <div class="grid projects-grid">
+        <article class="card">
+          <h3>MediRemind</h3>
+          <p>A medication tracker for older users and caregivers, with schedules, dose logging and adherence charts. Added text scaling and a high-contrast mode.</p>
+          <p class="tools">ASP.NET Core · SQLite · Tailwind CSS</p>
+          <div class="link-row">
+            <a href="https://github.com/Aryan39-ai/MediRemind">MediRemind on GitHub</a>
+          </div>
+        </article>
+        <article class="card">
+          <h3>SignBridge</h3>
+          <p>A desktop prototype that recognises trained signs and gestures through a webcam and presents the results as text and speech.</p>
+          <p class="tools">Python · MediaPipe · OpenCV · scikit-learn</p>
+          <div class="link-row">
+            <a href="https://github.com/Aryan39-ai/SLRS">SignBridge on GitHub</a>
+          </div>
+        </article>
+        <article class="card">
+          <h3>WeatherApp</h3>
+          <p>A cross-platform weather app with an OpenWeatherMap integration, weather-driven animations and xUnit tests for API responses and display formatting.</p>
+          <p class="tools">C# · .NET MAUI · XAML · xUnit</p>
+          <div class="link-row">
+            <a href="https://github.com/Aryan39-ai/WeatherApp">WeatherApp on GitHub</a>
+          </div>
+        </article>
+      </div>
     </section>
-    <section id="contact" class="contact">
-      <h2>Contact</h2>
-      <p>I am open to junior developer roles, internships, and freelance work.</p>
-      <a class="email" href="mailto:rnacharya39@gmail.com">rnacharya39@gmail.com</a>
-      <p><a href="https://github.com/Aryan39-ai" target="_blank" rel="noopener">GitHub</a> · <a href="https://www.linkedin.com/in/aryan-shresthacharya-405b1b30a/" target="_blank" rel="noopener">LinkedIn</a></p>
+
+    <section id="skills" aria-labelledby="skills-heading">
+      <h2 id="skills-heading">Skills and certifications</h2>
+      <div class="credentials">
+        <div>
+          <h3>Technical skills</h3>
+          <dl class="skills">
+            <div>
+              <dt>Web and mobile</dt>
+              <dd>WordPress, HTML, CSS, JavaScript, C#, ASP.NET Core, .NET MAUI</dd>
+            </div>
+            <div>
+              <dt>Data and integration</dt>
+              <dd>Python, SQL, SQLite, REST APIs, Altair AI Studio</dd>
+            </div>
+            <div>
+              <dt>Testing and delivery</dt>
+              <dd>Git, GitHub Actions, xUnit, responsive testing, technical documentation</dd>
+            </div>
+          </dl>
+        </div>
+        <div>
+          <h3>Microsoft certifications</h3>
+          <ul>
+            <li>Power Platform Fundamentals (PL-900), 2025</li>
+            <li>Azure Fundamentals (AZ-900), 2024</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact" aria-labelledby="contact-heading">
+      <h2 id="contact-heading">Contact</h2>
+      <p>I’m interested in entry-level roles in IT support, applications support and software development.</p>
+      <div class="link-row">
+        <a href="mailto:rnacharya39@gmail.com">rnacharya39@gmail.com</a>
+        <a href="https://github.com/Aryan39-ai">GitHub</a>
+        <a href="https://au.linkedin.com/in/rnacharya">LinkedIn</a>
+      </div>
     </section>
   </main>
-  <footer>© 2026 Aryan Shresthacharya · Sydney, Australia</footer>
+  <footer class="site-footer shell">
+    <p>© 2026 Aryan Shresthacharya</p>
+    <a href="#top">Back to top</a>
+  </footer>
 </body>
 </html>
